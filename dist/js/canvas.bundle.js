@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,100 +73,71 @@
 "use strict";
 
 
-var _gameManager = __webpack_require__(1);
-
-var _gameManager2 = _interopRequireDefault(_gameManager);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Initial Setup
-var canvas = document.querySelector('canvas'); // Imports
-
-var c = canvas.getContext('2d');
-
-var maxWidth = 900;
-var cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth;
-
-canvas.width = cWidth;
-canvas.height = cWidth / 2;
-
-// Variables
-var mouse = {
-    x: undefined,
-    y: undefined
-};
-
-var looping = false;
-
-var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
-
-var keysDown = [];
-
-// Event Listeners
-addEventListener('mousemove', function (e) {
-    var canvasPos = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - canvasPos.x;
-    mouse.y = e.clientY - canvasPos.y;
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+// Utility Functions
+function constrain(val, lowB, uppB) {
+  if (val < lowB) return lowB;
+  if (val > uppB) return uppB;
 
-addEventListener('resize', function () {
-    // canvas.width = innerWidth
-    // canvas.height = innerWidth * 0.5
-
-    // init()
-});
-
-addEventListener('click', function (e) {});
-
-addEventListener('keydown', function (e) {
-    gm.keyPressed(e);
-});
-
-addEventListener('keyup', function (e) {
-    gm.keyReleased(e);
-});
-
-function loop() {
-    looping = true;
-    animate();
+  return val;
 }
 
-function noLoop() {
-    looping = false;
+function randomIntFromRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// Objects
-var gm = void 0;
-
-// Implementation
-function init() {
-    looping = true;
-
-    var wBounds = {
-        x: canvas.width,
-        y: canvas.height
-    };
-
-    gm = new _gameManager2.default(wBounds);
+function randomColor(colors) {
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Animation Loop
-function animate() {
-    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+function distance(x1, y1, x2, y2) {
+  var xDist = x2 - x1;
+  var yDist = y2 - y1;
 
-    var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-    if (!(ignoreLoop || looping)) return;
-    requestAnimationFrame(animate);
-
-    c.clearRect(0, 0, canvas.width, canvas.height);
-
-    gm.update();
-    gm.draw(c);
+  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
 
-init();
-animate(undefined, true);
+function map(val, og_a, og_b, tg_a, tg_b) {
+  var as_int = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+
+  var og_range = og_b - og_a;
+  var constraint_val = val - og_a;
+  var percentage = constraint_val / og_range;
+
+  var tg_range = tg_b - tg_a;
+  var constraint_tg_val = percentage * tg_range;
+
+  var mapped = constraint_tg_val + tg_a;
+
+  if (as_int) {
+    mapped = Math.floor(mapped);
+  }
+
+  return mapped;
+}
+
+function max(a, b) {
+  var result = 0;
+  if (Number(a) > Number(b) && Number(a) != undefined) result = Number(a);
+  if (b != undefined) result = Number(b);
+
+  return result;
+}
+
+function min(a, b) {
+  if (a < b) return a;
+  return b;
+}
+
+exports.constrain = constrain;
+exports.randomIntFromRange = randomIntFromRange;
+exports.randomColor = randomColor;
+exports.distance = distance;
+exports.map = map;
+exports.max = max;
+exports.min = min;
 
 /***/ }),
 /* 1 */
@@ -181,15 +152,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(2);
+var _player = __webpack_require__(4);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _obstacle = __webpack_require__(4);
+var _obstacle = __webpack_require__(3);
 
 var _obstacle2 = _interopRequireDefault(_obstacle);
 
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -415,13 +386,258 @@ exports.default = GameManager;
 "use strict";
 
 
+var _gameManager = __webpack_require__(1);
+
+var _gameManager2 = _interopRequireDefault(_gameManager);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Initial Setup
+var canvas = document.querySelector('canvas'); // Imports
+
+var c = canvas.getContext('2d');
+
+var maxWidth = 900;
+var cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth;
+
+canvas.width = cWidth;
+canvas.height = cWidth / 2;
+
+// Variables
+var mouse = {
+    x: undefined,
+    y: undefined
+};
+
+var looping = false;
+
+var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
+
+var keysDown = [];
+
+// Event Listeners
+addEventListener('mousemove', function (e) {
+    var canvasPos = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - canvasPos.x;
+    mouse.y = e.clientY - canvasPos.y;
+});
+
+addEventListener('resize', function () {
+    // canvas.width = innerWidth
+    // canvas.height = innerWidth * 0.5
+
+    // init()
+});
+
+addEventListener('click', function (e) {});
+
+addEventListener('keydown', function (e) {
+    gm.keyPressed(e);
+});
+
+addEventListener('keyup', function (e) {
+    gm.keyReleased(e);
+});
+
+function loop() {
+    looping = true;
+    animate();
+}
+
+function noLoop() {
+    looping = false;
+}
+
+// Objects
+var gm = void 0;
+
+// Implementation
+function init() {
+    looping = true;
+
+    var wBounds = {
+        x: canvas.width,
+        y: canvas.height
+    };
+
+    gm = new _gameManager2.default(wBounds);
+}
+
+// Animation Loop
+function animate() {
+    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    if (!(ignoreLoop || looping)) return;
+    requestAnimationFrame(animate);
+
+    c.clearRect(0, 0, canvas.width, canvas.height);
+
+    gm.update();
+    gm.draw(c);
+}
+
+init();
+animate(undefined, true);
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Obstacle = function () {
+  function Obstacle(type, boundaries) {
+    var speed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {
+      return 0.0;
+    };
+
+    _classCallCheck(this, Obstacle);
+
+    var typeInfo = Obstacle.types[type];
+    this.bounds = boundaries;
+
+    this.type = type;
+
+    this.getCurrentSpeed = speed;
+
+    this.pos = {};
+    this.pos.x = this.bounds.x + typeInfo.pos.x;
+    this.pos.y = this.bounds.y - typeInfo.pos.y;
+
+    this.sz = {
+      x: typeInfo.width,
+      y: typeInfo.height
+    };
+
+    this.static = true;
+  }
+
+  _createClass(Obstacle, [{
+    key: 'update',
+    value: function update() {
+      var currentSpeed = this.getCurrentSpeed();
+
+      this.pos.x -= currentSpeed;
+    }
+  }, {
+    key: 'draw',
+    value: function draw(ctx) {
+      // console.log("drawing")
+      ctx.beginPath();
+      ctx.rect(this.pos.x, this.pos.y, this.sz.x, this.sz.y);
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'gray';
+      ctx.lineWidth = 2;
+      ctx.fill();
+      ctx.stroke();
+
+      if (this.type.startsWith("ground")) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.moveTo(this.pos.x - 1, this.pos.y + this.sz.y);
+        ctx.lineTo(this.pos.x + this.sz.x + 1, this.pos.y + this.sz.y);
+        ctx.stroke();
+      }
+    }
+  }], [{
+    key: 'getTypes',
+    value: function getTypes() {
+      var obstacleTypes = Object.keys(Obstacle.types);
+
+      return obstacleTypes;
+    }
+  }]);
+
+  return Obstacle;
+}();
+
+Obstacle.types = {
+  groundShortNarrow: {
+    width: 50,
+    height: 50,
+    pos: {
+      x: 0,
+      y: 40
+    }
+  },
+  groundShortWide: {
+    width: 100,
+    height: 50,
+    pos: {
+      x: 0,
+      y: 40
+    }
+  },
+  groundShortExtraWide: {
+    width: 120,
+    height: 50,
+    pos: {
+      x: 0,
+      y: 40
+    }
+  },
+  groundTallNarrow: {
+    width: 50,
+    height: 100,
+    pos: {
+      x: 0,
+      y: 90
+    }
+  },
+  groundTallWide: {
+    width: 80,
+    height: 100,
+    pos: {
+      x: 0,
+      y: 90
+    }
+  },
+  flyerMiddleShort: {
+    width: 50,
+    height: 30,
+    pos: {
+      x: 0,
+      y: 70
+    }
+  },
+  flyerMiddleTall: {
+    width: 50,
+    height: 90,
+    pos: {
+      x: 0,
+      y: 130
+    }
+  }
+};
+
+exports.default = Obstacle;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -567,222 +783,6 @@ var Ball = function () {
 }();
 
 exports.default = Ball;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// Utility Functions
-function constrain(val, lowB, uppB) {
-  if (val < lowB) return lowB;
-  if (val > uppB) return uppB;
-
-  return val;
-}
-
-function randomIntFromRange(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function randomColor(colors) {
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function distance(x1, y1, x2, y2) {
-  var xDist = x2 - x1;
-  var yDist = y2 - y1;
-
-  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-}
-
-function map(val, og_a, og_b, tg_a, tg_b) {
-  var as_int = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-
-  var og_range = og_b - og_a;
-  var constraint_val = val - og_a;
-  var percentage = constraint_val / og_range;
-
-  var tg_range = tg_b - tg_a;
-  var constraint_tg_val = percentage * tg_range;
-
-  var mapped = constraint_tg_val + tg_a;
-
-  if (as_int) {
-    mapped = Math.floor(mapped);
-  }
-
-  return mapped;
-}
-
-function max(a, b) {
-  var result = 0;
-  if (Number(a) > Number(b) && Number(a) != undefined) result = Number(a);
-  if (b != undefined) result = Number(b);
-
-  return result;
-}
-
-function min(a, b) {
-  if (a < b) return a;
-  return b;
-}
-
-exports.constrain = constrain;
-exports.randomIntFromRange = randomIntFromRange;
-exports.randomColor = randomColor;
-exports.distance = distance;
-exports.map = map;
-exports.max = max;
-exports.min = min;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Obstacle = function () {
-  function Obstacle(type, boundaries) {
-    var speed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {
-      return 0.0;
-    };
-
-    _classCallCheck(this, Obstacle);
-
-    var typeInfo = Obstacle.types[type];
-    this.bounds = boundaries;
-
-    this.type = type;
-
-    this.getCurrentSpeed = speed;
-
-    this.pos = {};
-    this.pos.x = this.bounds.x + typeInfo.pos.x;
-    this.pos.y = this.bounds.y - typeInfo.pos.y;
-
-    this.sz = {
-      x: typeInfo.width,
-      y: typeInfo.height
-    };
-
-    this.static = true;
-  }
-
-  _createClass(Obstacle, [{
-    key: 'update',
-    value: function update() {
-      var currentSpeed = this.getCurrentSpeed();
-
-      this.pos.x -= currentSpeed;
-    }
-  }, {
-    key: 'draw',
-    value: function draw(ctx) {
-      // console.log("drawing")
-      ctx.beginPath();
-      ctx.rect(this.pos.x, this.pos.y, this.sz.x, this.sz.y);
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'gray';
-      ctx.lineWidth = 2;
-      ctx.fill();
-      ctx.stroke();
-
-      if (this.type.startsWith("ground")) {
-        ctx.beginPath();
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.moveTo(this.pos.x - 1, this.pos.y + this.sz.y);
-        ctx.lineTo(this.pos.x + this.sz.x + 1, this.pos.y + this.sz.y);
-        ctx.stroke();
-      }
-    }
-  }], [{
-    key: 'getTypes',
-    value: function getTypes() {
-      var obstacleTypes = Object.keys(Obstacle.types);
-
-      return obstacleTypes;
-    }
-  }]);
-
-  return Obstacle;
-}();
-
-Obstacle.types = {
-  groundShortNarrow: {
-    width: 50,
-    height: 50,
-    pos: {
-      x: 0,
-      y: 40
-    }
-  },
-  groundShortWide: {
-    width: 100,
-    height: 50,
-    pos: {
-      x: 0,
-      y: 40
-    }
-  },
-  groundShortExtraWide: {
-    width: 120,
-    height: 50,
-    pos: {
-      x: 0,
-      y: 40
-    }
-  },
-  groundTallNarrow: {
-    width: 50,
-    height: 100,
-    pos: {
-      x: 0,
-      y: 90
-    }
-  },
-  groundTallWide: {
-    width: 80,
-    height: 100,
-    pos: {
-      x: 0,
-      y: 90
-    }
-  },
-  flyerMiddleShort: {
-    width: 50,
-    height: 30,
-    pos: {
-      x: 0,
-      y: 70
-    }
-  },
-  flyerMiddleTall: {
-    width: 50,
-    height: 90,
-    pos: {
-      x: 0,
-      y: 130
-    }
-  }
-};
-
-exports.default = Obstacle;
 
 /***/ })
 /******/ ]);

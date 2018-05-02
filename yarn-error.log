@@ -1,5 +1,5 @@
 Arguments: 
-  E:\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js build
+  E:\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js start
 
 PATH: 
   C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;E:\Git\cmd;E:\Ruby25-x64\bin;E:\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin;C:\adb;E:\Programas\Python\Python36-32\Scripts\;E:\Programas\Python\Python36-32\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin
@@ -5772,7 +5772,7 @@ Lockfile:
       yeoman-environment "^2.0.5"
 
 Trace: 
-  Error: Command "build" not found.
+  Error: Command "start" not found.
       at new MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
       at C:\Program Files (x86)\Yarn\lib\cli.js:87307:17
       at Generator.next (<anonymous>)
