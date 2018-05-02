@@ -392,9 +392,13 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Initial Setup
-var canvas = document.querySelector('canvas'); // Imports
+var gameVersion = '0.0.0.1'; // Imports
 
+
+console.log("Starting dino-clone version: " + gameVersion);
+
+// Initial Setup
+var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
 
 var maxWidth = 900;

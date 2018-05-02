@@ -1,6 +1,10 @@
 // Imports
 import GameManager from './gameManager'
 
+let gameVersion = '0.0.0.1'
+
+console.log("Starting dino-clone version: " + gameVersion)
+
 // Initial Setup
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
