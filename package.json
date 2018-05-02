@@ -5,8 +5,10 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "node ./.deploy.js",
-    "start": "webpack"
+    "deploy": "./node_modules/.bin/webpack && node ./.deploy.js",
+    "build": "./node_modules/.bin/webpack",
+    "start": "./node_modules/.bin/webpack --watch"
+
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,6 @@
     "browser-sync-webpack-plugin": "^1.1.4",
     "gh-pages": "^1.1.0",
     "webpack": "^2.5.1",
-    "webpack-cli": "^2.1.2"
+    "webpack-cli": "*"
   }
 }

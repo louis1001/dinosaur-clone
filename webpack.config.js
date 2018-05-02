@@ -26,8 +26,8 @@ module.exports = {
                 baseDir: ['dist']
             },
             files: ['./dist/*']
-        }),
+        })
     ],
-    watch: true,
+    watch: false,
     devtool: 'source-map'
 };

@@ -125,7 +125,7 @@ export default class GameManager {
 
     let HighScoreText = "" + Math.round(sessionStorage.hScore)
     scoreText = HighScoreText.padStart(9, "0")
-    ctx.fillText("HI", this.worldBounds.x - 145, 30)
+    ctx.fillText("HIGH", this.worldBounds.x - 160, 30)
     ctx.fillText(scoreText, this.worldBounds.x - 120, 30)
 
     let scoreText = "" + Math.round(this.player.score)
