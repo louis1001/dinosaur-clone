@@ -376,15 +376,22 @@ var GameManager = function () {
         obj.update();
       });
 
-      this.obstacles = this.obstacles.filter(function (obj) {
-        return obj.pos.x < -obj.sz.x;
-      });
-      this.gameObjects = this.gameObjects.filter(function (obj) {
-        if (obj instanceof _obstacle2.default) {
-          if (obj.pos.x < -obj.sz.x) return false;
+      //this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
+      // this.gameObjects = this.gameObjects.filter(obj => {
+      //   if (obj instanceof Obstacle) {
+      //     if (obj.pos.x < -obj.sz.x) return false
+      //   }
+      //   return true
+      // })
+
+      for (var i = this.obstacles.length - 1; i >= 0; i--) {
+        var obs = this.obstacles[i];
+        if (obs.pos.x < -obs.sz.x) {
+          this.obstacles.splice(i, 1);
+          var goIndex = this.gameObjects.indexOf(obs);
+          this.gameObjects.splice(goIndex, 1);
         }
-        return true;
-      });
+      }
 
       if (this.obstacleDelay <= 0) {
         this.createObstacle();
@@ -446,7 +453,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.1.0'; // Imports
+var gameVersion = '0.0.1.1'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);

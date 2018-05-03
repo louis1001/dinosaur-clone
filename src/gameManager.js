@@ -196,13 +196,22 @@ export default class GameManager {
       obj.update()
     })
 
-    this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
-    this.gameObjects = this.gameObjects.filter(obj => {
-      if (obj instanceof Obstacle) {
-        if (obj.pos.x < -obj.sz.x) return false
+    //this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
+    // this.gameObjects = this.gameObjects.filter(obj => {
+    //   if (obj instanceof Obstacle) {
+    //     if (obj.pos.x < -obj.sz.x) return false
+    //   }
+    //   return true
+    // })
+
+    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+      let obs = this.obstacles[i]
+      if (obs.pos.x < -obs.sz.x) {
+        this.obstacles.splice(i, 1)
+        let goIndex = this.gameObjects.indexOf(obs)
+        this.gameObjects.splice(goIndex, 1)
       }
-      return true
-    })
+    }
 
     if (this.obstacleDelay <= 0) {
       this.createObstacle()
