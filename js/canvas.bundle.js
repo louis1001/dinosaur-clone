@@ -405,7 +405,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.0.2'; // Imports
+var gameVersion = '0.0.0.3'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
@@ -454,6 +454,20 @@ addEventListener('mousedown', function (e) {
 });
 
 addEventListener('mouseup', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
+
+addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+
+addEventListener('touchend', function (e) {
     e.preventDefault();
     gm.keyReleased({
         key: ' '
