@@ -177,7 +177,7 @@ export default class GameManager {
       this.createObstacle()
     }
 
-    this.obstacleDelay -= 1
+    this.obstacleDelay -= this.config.gameSpeed / 10
 
     this.config.gameSpeed += this.config.acceleration
     this.player.score += this.config.gameSpeed * 0.02
