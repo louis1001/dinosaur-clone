@@ -74,6 +74,10 @@ addEventListener('touchend', e => {
 })
 
 addEventListener('keydown', e => {
+    if (e.key == 'r') {
+        init()
+        return
+    }
     gm.keyPressed(e)
 })
 

@@ -518,6 +518,10 @@ addEventListener('touchend', function (e) {
 });
 
 addEventListener('keydown', function (e) {
+    if (e.key == 'r') {
+        init();
+        return;
+    }
     gm.keyPressed(e);
 });
 
