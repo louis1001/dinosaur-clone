@@ -104,7 +104,8 @@ export default class GameManager {
 
     this.floorPoints = this.floorPoints.filter(pt => pt.x > -1)
 
-    if (Math.random() > 0.8) {
+    let numPoints = this.floorPoints.length
+    if (numPoints == 0 || this.floorPoints[numPoints - 1].x <= this.worldBounds.x) {
       let ptX = map(Math.random(), 0, 1, 0, 40)
       let ptY = map(Math.random(), 0, 1, 0, this.config.floorHeight)
 

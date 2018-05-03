@@ -275,7 +275,8 @@ var GameManager = function () {
         return pt.x > -1;
       });
 
-      if (Math.random() > 0.8) {
+      var numPoints = this.floorPoints.length;
+      if (numPoints == 0 || this.floorPoints[numPoints - 1].x <= this.worldBounds.x) {
         var ptX = (0, _utils.map)(Math.random(), 0, 1, 0, 40);
         var ptY = (0, _utils.map)(Math.random(), 0, 1, 0, this.config.floorHeight);
 
