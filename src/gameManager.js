@@ -10,20 +10,34 @@ export default class GameManager {
 
   constructor(worldBounds) {
     this.worldBounds = worldBounds
-    this.gravity = {
+
+    let gravity = {
       x: 0,
       y: 2
     }
 
-    this.highestScore = 0
+    let highestScore = 0
 
-    this.floorHeight = 80
+    let floorHeight = 80
+
     this.floorPoints = []
 
-    this.obstacleOffset = 60
+    let obstacleOffset = 60
 
-    this.gameSpeed = 10
-    this.acceleration = 0.001
+    let gameSpeed = 10
+
+    let acceleration = 0.001
+    this.config = {
+      gravity,
+      highestScore,
+      floorHeight,
+      obstacleOffset,
+      gameSpeed,
+      acceleration
+    }
+
+    window.gameConfig = this.config
+
     this.keysDown = []
     this.init()
   }
@@ -35,7 +49,7 @@ export default class GameManager {
       x: 100 - playerRad,
       y: -Infinity,
       w: 100 + playerRad,
-      h: this.worldBounds.y - this.floorHeight
+      h: this.worldBounds.y - this.config.floorHeight
     }
 
     let playerVel = {
@@ -47,7 +61,7 @@ export default class GameManager {
 
     this.gameObjects = [this.player]
     this.obstacles = []
-    this.obstacleDelay = this.obstacleOffset
+    this.obstacleDelay = this.config.obstacleOffset
 
     this.gameOver = false
 
@@ -63,16 +77,16 @@ export default class GameManager {
 
     let obstacleBounds = {
       x: this.worldBounds.x,
-      y: this.worldBounds.y - this.floorHeight
+      y: this.worldBounds.y - this.config.floorHeight
     }
 
-    let obsSpeed = () => this.gameSpeed
+    let obsSpeed = () => this.config.gameSpeed
 
     let newObstacle = new Obstacle(availableTypes[randomIndex], obstacleBounds, obsSpeed)
 
     this.obstacles.push(newObstacle)
     this.gameObjects.push(newObstacle)
-    this.obstacleDelay = randomIntFromRange(this.obstacleOffset - 20, this.obstacleOffset + 30)
+    this.obstacleDelay = randomIntFromRange(this.config.obstacleOffset - 20, this.config.obstacleOffset + 30)
   }
 
   drawFloor(ctx) {
@@ -84,7 +98,7 @@ export default class GameManager {
       ctx.strokeStyle = 'gray'
       ctx.stroke()
       ctx.fill()
-      pnt.x -= this.gameSpeed
+      pnt.x -= this.config.gameSpeed
 
     })
 
@@ -92,7 +106,7 @@ export default class GameManager {
 
     if (Math.random() > 0.8) {
       let ptX = map(Math.random(), 0, 1, 0, 40)
-      let ptY = map(Math.random(), 0, 1, 0, this.floorHeight)
+      let ptY = map(Math.random(), 0, 1, 0, this.config.floorHeight)
 
       this.floorPoints.push({
         x: this.worldBounds.x + ptX,
@@ -102,9 +116,9 @@ export default class GameManager {
 
     ctx.beginPath()
 
-    ctx.moveTo(0, this.worldBounds.y - this.floorHeight - 5)
+    ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5)
 
-    ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.floorHeight - 5)
+    ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5)
     ctx.stroke()
 
   }
@@ -146,7 +160,7 @@ export default class GameManager {
 
     this.gameObjects.forEach(obj => {
       if (!obj.static) {
-        obj.applyForce(this.gravity)
+        obj.applyForce(this.config.gravity)
       }
       obj.update()
     })
@@ -165,10 +179,10 @@ export default class GameManager {
 
     this.obstacleDelay -= 1
 
-    this.gameSpeed += this.acceleration
-    this.player.score += this.gameSpeed * 0.02
+    this.config.gameSpeed += this.config.acceleration
+    this.player.score += this.config.gameSpeed * 0.02
 
-    this.updateScore
+    this.updateScore()
   }
 
   updateScore() {

@@ -171,20 +171,34 @@ var GameManager = function () {
     _classCallCheck(this, GameManager);
 
     this.worldBounds = worldBounds;
-    this.gravity = {
+
+    var gravity = {
       x: 0,
       y: 2
     };
 
-    this.highestScore = 0;
+    var highestScore = 0;
 
-    this.floorHeight = 80;
+    var floorHeight = 80;
+
     this.floorPoints = [];
 
-    this.obstacleOffset = 60;
+    var obstacleOffset = 60;
 
-    this.gameSpeed = 10;
-    this.acceleration = 0.001;
+    var gameSpeed = 10;
+
+    var acceleration = 0.001;
+    this.config = {
+      gravity: gravity,
+      highestScore: highestScore,
+      floorHeight: floorHeight,
+      obstacleOffset: obstacleOffset,
+      gameSpeed: gameSpeed,
+      acceleration: acceleration
+    };
+
+    window.gameConfig = this.config;
+
     this.keysDown = [];
     this.init();
   }
@@ -198,7 +212,7 @@ var GameManager = function () {
         x: 100 - playerRad,
         y: -Infinity,
         w: 100 + playerRad,
-        h: this.worldBounds.y - this.floorHeight
+        h: this.worldBounds.y - this.config.floorHeight
       };
 
       var playerVel = {
@@ -210,7 +224,7 @@ var GameManager = function () {
 
       this.gameObjects = [this.player];
       this.obstacles = [];
-      this.obstacleDelay = this.obstacleOffset;
+      this.obstacleDelay = this.config.obstacleOffset;
 
       this.gameOver = false;
 
@@ -228,18 +242,18 @@ var GameManager = function () {
 
       var obstacleBounds = {
         x: this.worldBounds.x,
-        y: this.worldBounds.y - this.floorHeight
+        y: this.worldBounds.y - this.config.floorHeight
       };
 
       var obsSpeed = function obsSpeed() {
-        return _this.gameSpeed;
+        return _this.config.gameSpeed;
       };
 
       var newObstacle = new _obstacle2.default(availableTypes[randomIndex], obstacleBounds, obsSpeed);
 
       this.obstacles.push(newObstacle);
       this.gameObjects.push(newObstacle);
-      this.obstacleDelay = (0, _utils.randomIntFromRange)(this.obstacleOffset - 20, this.obstacleOffset + 30);
+      this.obstacleDelay = (0, _utils.randomIntFromRange)(this.config.obstacleOffset - 20, this.config.obstacleOffset + 30);
     }
   }, {
     key: 'drawFloor',
@@ -254,7 +268,7 @@ var GameManager = function () {
         ctx.strokeStyle = 'gray';
         ctx.stroke();
         ctx.fill();
-        pnt.x -= _this2.gameSpeed;
+        pnt.x -= _this2.config.gameSpeed;
       });
 
       this.floorPoints = this.floorPoints.filter(function (pt) {
@@ -263,7 +277,7 @@ var GameManager = function () {
 
       if (Math.random() > 0.8) {
         var ptX = (0, _utils.map)(Math.random(), 0, 1, 0, 40);
-        var ptY = (0, _utils.map)(Math.random(), 0, 1, 0, this.floorHeight);
+        var ptY = (0, _utils.map)(Math.random(), 0, 1, 0, this.config.floorHeight);
 
         this.floorPoints.push({
           x: this.worldBounds.x + ptX,
@@ -273,9 +287,9 @@ var GameManager = function () {
 
       ctx.beginPath();
 
-      ctx.moveTo(0, this.worldBounds.y - this.floorHeight - 5);
+      ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5);
 
-      ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.floorHeight - 5);
+      ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5);
       ctx.stroke();
     }
   }, {
@@ -320,7 +334,7 @@ var GameManager = function () {
 
       this.gameObjects.forEach(function (obj) {
         if (!obj.static) {
-          obj.applyForce(_this3.gravity);
+          obj.applyForce(_this3.config.gravity);
         }
         obj.update();
       });
@@ -341,10 +355,10 @@ var GameManager = function () {
 
       this.obstacleDelay -= 1;
 
-      this.gameSpeed += this.acceleration;
-      this.player.score += this.gameSpeed * 0.02;
+      this.config.gameSpeed += this.config.acceleration;
+      this.player.score += this.config.gameSpeed * 0.02;
 
-      this.updateScore;
+      this.updateScore();
     }
   }, {
     key: 'updateScore',
@@ -390,7 +404,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.0.1'; // Imports
+var gameVersion = '0.0.0.2'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
