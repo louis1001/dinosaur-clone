@@ -354,7 +354,7 @@ var GameManager = function () {
         this.createObstacle();
       }
 
-      this.obstacleDelay -= this.config.gameSpeed / 10;
+      this.obstacleDelay -= this.config.gameSpeed / 20;
 
       this.config.gameSpeed += this.config.acceleration;
 
