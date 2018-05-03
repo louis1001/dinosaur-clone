@@ -501,7 +501,7 @@ function animate() {
     if (!(ignoreLoop || looping)) return;
     requestAnimationFrame(animate);
 
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    if (!gm.keysDown.includes(" ")) c.clearRect(0, 0, canvas.width, canvas.height);
 
     gm.update();
     gm.draw(c);
