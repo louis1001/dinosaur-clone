@@ -446,7 +446,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.0.3'; // Imports
+var gameVersion = '0.0.1.0'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
