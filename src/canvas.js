@@ -41,6 +41,8 @@ addEventListener('resize', () => {
     // init()
 })
 
+
+
 addEventListener('mousedown', e => {
     e.preventDefault()
     gm.keyPressed({
@@ -49,6 +51,20 @@ addEventListener('mousedown', e => {
 })
 
 addEventListener('mouseup', e => {
+    e.preventDefault()
+    gm.keyReleased({
+        key: ' '
+    })
+})
+
+addEventListener('touchstart', e => {
+    e.preventDefault()
+    gm.keyPressed({
+        key: ' '
+    })
+})
+
+addEventListener('touchend', e => {
     e.preventDefault()
     gm.keyReleased({
         key: ' '

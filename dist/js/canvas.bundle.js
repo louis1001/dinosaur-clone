@@ -460,6 +460,20 @@ addEventListener('mouseup', function (e) {
     });
 });
 
+addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+
+addEventListener('touchend', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
+
 addEventListener('keydown', function (e) {
     gm.keyPressed(e);
 });
