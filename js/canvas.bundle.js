@@ -275,7 +275,8 @@ var GameManager = function () {
         return pt.x > -1;
       });
 
-      if (Math.random() > 0.8) {
+      var numPoints = this.floorPoints.length;
+      if (numPoints == 0 || this.floorPoints[numPoints - 1].x <= this.worldBounds.x) {
         var ptX = (0, _utils.map)(Math.random(), 0, 1, 0, 40);
         var ptY = (0, _utils.map)(Math.random(), 0, 1, 0, this.config.floorHeight);
 
@@ -353,16 +354,16 @@ var GameManager = function () {
         this.createObstacle();
       }
 
-      this.obstacleDelay -= this.config.gameSpeed / 10;
+      this.obstacleDelay -= this.config.gameSpeed / 20;
 
       this.config.gameSpeed += this.config.acceleration;
-      this.player.score += this.config.gameSpeed * 0.02;
 
       this.updateScore();
     }
   }, {
     key: 'updateScore',
     value: function updateScore() {
+      this.player.score += this.config.gameSpeed * 0.02;
       if (this.player.score > sessionStorage.hScore) {
         sessionStorage.hScore = this.player.score;
         this.highestScore = this.player.score;
@@ -445,7 +446,19 @@ addEventListener('resize', function () {
     // init()
 });
 
-addEventListener('click', function (e) {});
+addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+
+addEventListener('mouseup', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
 
 addEventListener('keydown', function (e) {
     gm.keyPressed(e);
