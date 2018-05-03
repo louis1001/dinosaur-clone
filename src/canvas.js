@@ -1,7 +1,7 @@
 // Imports
 import GameManager from './gameManager'
 
-let gameVersion = '0.0.0.2'
+let gameVersion = '0.0.0.3'
 
 console.log("Starting dino-clone version: " + gameVersion)
 
@@ -63,7 +63,9 @@ addEventListener('touchstart', e => {
         key: ' '
     })
 })
-
+addEventListener('touchmove', e => {
+    e.preventDefault()
+})
 addEventListener('touchend', e => {
     e.preventDefault()
     gm.keyReleased({
@@ -109,8 +111,7 @@ function animate(_ = false, ignoreLoop = false) {
     if (!(ignoreLoop || looping)) return
     requestAnimationFrame(animate)
 
-    if (!gm.keysDown.includes(" "))
-        c.clearRect(0, 0, canvas.width, canvas.height)
+    c.clearRect(0, 0, canvas.width, canvas.height)
 
     gm.update()
     gm.draw(c)

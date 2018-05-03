@@ -405,7 +405,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.0.2'; // Imports
+var gameVersion = '0.0.0.3'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
@@ -466,7 +466,9 @@ addEventListener('touchstart', function (e) {
         key: ' '
     });
 });
-
+addEventListener('touchmove', function (e) {
+    e.preventDefault();
+});
 addEventListener('touchend', function (e) {
     e.preventDefault();
     gm.keyReleased({
@@ -515,7 +517,7 @@ function animate() {
     if (!(ignoreLoop || looping)) return;
     requestAnimationFrame(animate);
 
-    if (!gm.keysDown.includes(" ")) c.clearRect(0, 0, canvas.width, canvas.height);
+    c.clearRect(0, 0, canvas.width, canvas.height);
 
     gm.update();
     gm.draw(c);
