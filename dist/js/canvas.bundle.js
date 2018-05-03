@@ -357,13 +357,13 @@ var GameManager = function () {
       this.obstacleDelay -= this.config.gameSpeed / 10;
 
       this.config.gameSpeed += this.config.acceleration;
-      this.player.score += this.config.gameSpeed * 0.02;
 
       this.updateScore();
     }
   }, {
     key: 'updateScore',
     value: function updateScore() {
+      this.player.score += this.config.gameSpeed * 0.02;
       if (this.player.score > sessionStorage.hScore) {
         sessionStorage.hScore = this.player.score;
         this.highestScore = this.player.score;
