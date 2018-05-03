@@ -27,19 +27,33 @@ export default class GameManager {
     let gameSpeed = 10
 
     let acceleration = 0.001
+
+    let paused = false
     this.config = {
       gravity,
       highestScore,
       floorHeight,
       obstacleOffset,
       gameSpeed,
-      acceleration
+      acceleration,
+      paused
     }
 
     window.gameConfig = this.config
 
-    this.keysDown = []
+    this.initKeyHandlers()
     this.init()
+  }
+
+  initKeyHandlers() {
+    this.keysDown = []
+
+    this.keyHandlers = [{
+      key: "p",
+      callback: e => {
+        this.config.paused = !this.config.paused
+      }
+    }]
   }
 
   init() {
@@ -98,8 +112,23 @@ export default class GameManager {
       ctx.strokeStyle = 'gray'
       ctx.stroke()
       ctx.fill()
-      pnt.x -= this.config.gameSpeed
+    })
 
+    ctx.beginPath()
+    ctx.strokeStyle = 'gray'
+    ctx.lineWidth = 1
+
+    ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5)
+
+    ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5)
+    ctx.stroke()
+    ctx.closePath()
+
+  }
+
+  updateFloor() {
+    this.floorPoints.forEach(pnt => {
+      pnt.x -= this.config.gameSpeed
     })
 
     this.floorPoints = this.floorPoints.filter(pt => pt.x > -1)
@@ -114,14 +143,6 @@ export default class GameManager {
         y: this.worldBounds.y - ptY
       })
     }
-
-    ctx.beginPath()
-
-    ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5)
-
-    ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5)
-    ctx.stroke()
-
   }
 
   draw(ctx) {
@@ -145,6 +166,13 @@ export default class GameManager {
     scoreText = scoreText.padStart(9, "0")
     ctx.fillText(scoreText, this.worldBounds.x - 120, 70)
 
+    if (this.config.paused) {
+      ctx.fillStyle = 'darkgray'
+      ctx.font = '50px sans-serif'
+
+      let pauseText = "PAUSED"
+      ctx.fillText(pauseText, this.worldBounds.x * 0.4, this.worldBounds.y / 2)
+    }
   }
 
   handleKeys() {
@@ -156,8 +184,10 @@ export default class GameManager {
   }
 
   update() {
-    if (this.gameOver) return
+    if (this.config.paused || this.gameOver) return
     this.handleKeys()
+
+    this.updateFloor()
 
     this.gameObjects.forEach(obj => {
       if (!obj.static) {
@@ -194,6 +224,11 @@ export default class GameManager {
   }
 
   keyPressed(e) {
+    this.keyHandlers.forEach(kh => {
+      if (kh.key == e.key) {
+        kh.callback(e)
+      }
+    })
     if (!this.keysDown.includes(e.key)) {
       this.keysDown.push(e.key)
     }

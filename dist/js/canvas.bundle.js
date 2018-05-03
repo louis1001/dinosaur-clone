@@ -188,22 +188,39 @@ var GameManager = function () {
     var gameSpeed = 10;
 
     var acceleration = 0.001;
+
+    var paused = false;
     this.config = {
       gravity: gravity,
       highestScore: highestScore,
       floorHeight: floorHeight,
       obstacleOffset: obstacleOffset,
       gameSpeed: gameSpeed,
-      acceleration: acceleration
+      acceleration: acceleration,
+      paused: paused
     };
 
     window.gameConfig = this.config;
 
-    this.keysDown = [];
+    this.initKeyHandlers();
     this.init();
   }
 
   _createClass(GameManager, [{
+    key: 'initKeyHandlers',
+    value: function initKeyHandlers() {
+      var _this = this;
+
+      this.keysDown = [];
+
+      this.keyHandlers = [{
+        key: "p",
+        callback: function callback(e) {
+          _this.config.paused = !_this.config.paused;
+        }
+      }];
+    }
+  }, {
     key: 'init',
     value: function init() {
 
@@ -235,7 +252,7 @@ var GameManager = function () {
   }, {
     key: 'createObstacle',
     value: function createObstacle() {
-      var _this = this;
+      var _this2 = this;
 
       var availableTypes = _obstacle2.default.getTypes();
       var randomIndex = (0, _utils.randomIntFromRange)(0, availableTypes.length - 1);
@@ -246,7 +263,7 @@ var GameManager = function () {
       };
 
       var obsSpeed = function obsSpeed() {
-        return _this.config.gameSpeed;
+        return _this2.config.gameSpeed;
       };
 
       var newObstacle = new _obstacle2.default(availableTypes[randomIndex], obstacleBounds, obsSpeed);
@@ -258,8 +275,6 @@ var GameManager = function () {
   }, {
     key: 'drawFloor',
     value: function drawFloor(ctx) {
-      var _this2 = this;
-
       this.floorPoints.forEach(function (pnt, i) {
         ctx.beginPath();
         ctx.arc(pnt.x, pnt.y, 2, 0, Math.PI * 2);
@@ -268,7 +283,25 @@ var GameManager = function () {
         ctx.strokeStyle = 'gray';
         ctx.stroke();
         ctx.fill();
-        pnt.x -= _this2.config.gameSpeed;
+      });
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'gray';
+      ctx.lineWidth = 1;
+
+      ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5);
+
+      ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5);
+      ctx.stroke();
+      ctx.closePath();
+    }
+  }, {
+    key: 'updateFloor',
+    value: function updateFloor() {
+      var _this3 = this;
+
+      this.floorPoints.forEach(function (pnt) {
+        pnt.x -= _this3.config.gameSpeed;
       });
 
       this.floorPoints = this.floorPoints.filter(function (pt) {
@@ -285,13 +318,6 @@ var GameManager = function () {
           y: this.worldBounds.y - ptY
         });
       }
-
-      ctx.beginPath();
-
-      ctx.moveTo(0, this.worldBounds.y - this.config.floorHeight - 5);
-
-      ctx.lineTo(this.worldBounds.x, this.worldBounds.y - this.config.floorHeight - 5);
-      ctx.stroke();
     }
   }, {
     key: 'draw',
@@ -315,6 +341,14 @@ var GameManager = function () {
       var scoreText = "" + Math.round(this.player.score);
       scoreText = scoreText.padStart(9, "0");
       ctx.fillText(scoreText, this.worldBounds.x - 120, 70);
+
+      if (this.config.paused) {
+        ctx.fillStyle = 'darkgray';
+        ctx.font = '50px sans-serif';
+
+        var pauseText = "PAUSED";
+        ctx.fillText(pauseText, this.worldBounds.x * 0.4, this.worldBounds.y / 2);
+      }
     }
   }, {
     key: 'handleKeys',
@@ -328,14 +362,16 @@ var GameManager = function () {
   }, {
     key: 'update',
     value: function update() {
-      var _this3 = this;
+      var _this4 = this;
 
-      if (this.gameOver) return;
+      if (this.config.paused || this.gameOver) return;
       this.handleKeys();
+
+      this.updateFloor();
 
       this.gameObjects.forEach(function (obj) {
         if (!obj.static) {
-          obj.applyForce(_this3.config.gravity);
+          obj.applyForce(_this4.config.gravity);
         }
         obj.update();
       });
@@ -372,6 +408,11 @@ var GameManager = function () {
   }, {
     key: 'keyPressed',
     value: function keyPressed(e) {
+      this.keyHandlers.forEach(function (kh) {
+        if (kh.key == e.key) {
+          kh.callback(e);
+        }
+      });
       if (!this.keysDown.includes(e.key)) {
         this.keysDown.push(e.key);
       }
