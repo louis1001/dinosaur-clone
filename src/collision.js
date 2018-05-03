@@ -55,7 +55,11 @@ function areCirclesColliding(circle1, circle2) {
   let hbx1 = circle1.hitbox
   let hbx2 = circle2.hitbox
 
-  let distanceBetweenCircles = distance(circle1.parent.pos.x, circle1.parent.pos.y, circle2.parent.pos.x, circle2.parent.pos.y)
+  let distanceBetweenCircles = distance(
+    circle1.parent.pos.x,
+    circle1.parent.pos.y,
+    circle2.parent.pos.x,
+    circle2.parent.pos.y)
 
   return distanceBetweenCircles < hbx1.radius + hbx2.radius
 }
@@ -103,7 +107,10 @@ class CollitionListener {
   setCheckingFunction() {
 
     if (this.body1.type === this.body2.type) {
-      this.checkFunction = this.body1.type === CircleCollider ? areCirclesColliding : areRectsColliding
+      this.checkFunction =
+        this.body1.type === CircleCollider ?
+        areCirclesColliding :
+        areRectsColliding
     } else {
       this.checkFunction = areRectCircleColliding
       if (this.body1.type === CircleCollider) {
@@ -112,24 +119,6 @@ class CollitionListener {
         this.body2 = temp
       }
     }
-    /*
-    if(this.body1.type == CircleCollider){
-      if(this.body2.type == CircleCollider){
-        this.checkFunction = areCirclesColliding
-      }else if (this.body1.type1 == RectCollider){
-        let temp = this.body1
-        this.body1 = this.body2
-        this.body2 = temp
-        this.checkFunction = areRectCircleColliding
-      }
-    }else if (this.body1.type1 == RectCollider){
-      if(this.body2.type == CircleCollider){
-        this.checkFunction = areRectCircleColliding
-      }else if (this.body2.type1 == RectCollider){
-        this.checkFunction = areRectsColliding
-      }
-    }
-    */
   }
 
   areColliding() {
