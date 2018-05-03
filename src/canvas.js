@@ -41,8 +41,18 @@ addEventListener('resize', () => {
     // init()
 })
 
-addEventListener('click', e => {
+addEventListener('mousedown', e => {
+    e.preventDefault()
+    gm.keyPressed({
+        key: ' '
+    })
+})
 
+addEventListener('mouseup', e => {
+    e.preventDefault()
+    gm.keyReleased({
+        key: ' '
+    })
 })
 
 addEventListener('keydown', e => {

@@ -446,7 +446,19 @@ addEventListener('resize', function () {
     // init()
 });
 
-addEventListener('click', function (e) {});
+addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+
+addEventListener('mouseup', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
 
 addEventListener('keydown', function (e) {
     gm.keyPressed(e);
