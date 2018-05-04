@@ -1,7 +1,7 @@
 // Imports
 import GameManager from './gameManager'
 
-let gameVersion = '0.0.1.1'
+let gameVersion = '0.0.1.2'
 
 console.log("Starting dino-clone version: " + gameVersion)
 
