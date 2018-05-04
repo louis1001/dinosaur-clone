@@ -1,6 +1,10 @@
 import Player from './player'
 import Obstacle from './obstacle'
 import {
+  BodyWorld
+} from './collision'
+
+import {
   randomIntFromRange,
   map,
   max
@@ -11,6 +15,27 @@ export default class GameManager {
   constructor(worldBounds) {
     this.worldBounds = worldBounds
 
+    this.initKeyHandlers()
+    this.init()
+  }
+
+  initKeyHandlers() {
+    this.keysDown = []
+
+    this.keyHandlers = [{
+      key: "p",
+      callback: e => {
+        this.config.paused = !this.config.paused
+      }
+    }]
+  }
+
+  collided() {
+    console.log("Collision!")
+    this.init()
+  }
+
+  init() {
     let gravity = {
       x: 0,
       y: 2
@@ -41,22 +66,7 @@ export default class GameManager {
 
     window.gameConfig = this.config
 
-    this.initKeyHandlers()
-    this.init()
-  }
-
-  initKeyHandlers() {
-    this.keysDown = []
-
-    this.keyHandlers = [{
-      key: "p",
-      callback: e => {
-        this.config.paused = !this.config.paused
-      }
-    }]
-  }
-
-  init() {
+    this.collisionWorld = new BodyWorld()
 
     let playerRad = 15
     let playerBounds = {
@@ -101,6 +111,8 @@ export default class GameManager {
     this.obstacles.push(newObstacle)
     this.gameObjects.push(newObstacle)
     this.obstacleDelay = randomIntFromRange(this.config.obstacleOffset - 20, this.config.obstacleOffset + 30)
+
+    this.collisionWorld.addCollitionListener(this.player, newObstacle, this.collided.bind(this))
   }
 
   drawFloor(ctx) {
@@ -221,6 +233,7 @@ export default class GameManager {
 
     this.config.gameSpeed += this.config.acceleration
 
+    this.collisionWorld.update()
     this.updateScore()
   }
 

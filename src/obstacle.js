@@ -1,3 +1,7 @@
+import {
+  RectCollider
+} from './collision'
+
 class Obstacle {
 
   constructor(type, boundaries, speed = () => 0.0) {
@@ -16,6 +20,8 @@ class Obstacle {
       x: typeInfo.width,
       y: typeInfo.height
     }
+
+    this.body = new RectCollider(this)
 
     this.static = true
   }
@@ -44,6 +50,8 @@ class Obstacle {
       ctx.lineTo(this.pos.x + this.sz.x + 1, this.pos.y + this.sz.y)
       ctx.stroke()
     }
+
+    this.body.draw(ctx)
   }
 
   static getTypes() {

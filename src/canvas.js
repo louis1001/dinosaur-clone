@@ -117,8 +117,8 @@ function animate(_ = false, ignoreLoop = false) {
 
     c.clearRect(0, 0, canvas.width, canvas.height)
 
-    gm.update()
     gm.draw(c)
+    gm.update()
 }
 
 init()

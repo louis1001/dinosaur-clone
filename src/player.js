@@ -4,6 +4,10 @@ import {
   map
 } from './utils'
 
+import {
+  CircleCollider
+} from './collision'
+
 export default class Ball {
 
   constructor(x, y, vel, radius, color, boundaries = {
@@ -29,6 +33,7 @@ export default class Ball {
 
     this.bounds = boundaries
 
+
     this.score = 0
 
     this.acc = {
@@ -45,6 +50,7 @@ export default class Ball {
     this.currentSpeed = distance(0, 0, this.vel.x, this.vel.y)
 
     this.bounce = 0.00
+    this.body = new CircleCollider(this)
   }
 
   applyForce(f) {
@@ -134,6 +140,10 @@ export default class Ball {
     ctx.lineWidth = 3
     ctx.strokeStyle = 'gray'
     ctx.stroke()
+
+    ctx.beginPath()
+
+    this.body.draw(ctx)
   }
 
 }
