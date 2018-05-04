@@ -143,7 +143,8 @@ export default class Ball {
 
     ctx.beginPath()
 
-    this.body.draw(ctx)
+    if (window.gameConfig.debugging)
+      this.body.draw(ctx)
   }
 
 }

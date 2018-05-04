@@ -51,7 +51,8 @@ class Obstacle {
       ctx.stroke()
     }
 
-    this.body.draw(ctx)
+    if (window.gameConfig.debugging)
+      this.body.draw(ctx)
   }
 
   static getTypes() {

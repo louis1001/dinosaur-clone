@@ -218,6 +218,8 @@ var GameManager = function () {
 
       var acceleration = 0.001;
 
+      var debugging = false;
+
       var paused = false;
       this.config = {
         gravity: gravity,
@@ -226,7 +228,8 @@ var GameManager = function () {
         obstacleOffset: obstacleOffset,
         gameSpeed: gameSpeed,
         acceleration: acceleration,
-        paused: paused
+        paused: paused,
+        debugging: debugging
       };
 
       window.gameConfig = this.config;
@@ -664,7 +667,7 @@ var Obstacle = function () {
         ctx.stroke();
       }
 
-      this.body.draw(ctx);
+      if (window.gameConfig.debugging) this.body.draw(ctx);
     }
   }], [{
     key: 'getTypes',
@@ -897,7 +900,7 @@ var Ball = function () {
 
             ctx.beginPath();
 
-            this.body.draw(ctx);
+            if (window.gameConfig.debugging) this.body.draw(ctx);
         }
     }]);
 

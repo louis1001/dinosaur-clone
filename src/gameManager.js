@@ -53,6 +53,8 @@ export default class GameManager {
 
     let acceleration = 0.001
 
+    let debugging = false
+
     let paused = false
     this.config = {
       gravity,
@@ -61,7 +63,8 @@ export default class GameManager {
       obstacleOffset,
       gameSpeed,
       acceleration,
-      paused
+      paused,
+      debugging
     }
 
     window.gameConfig = this.config
