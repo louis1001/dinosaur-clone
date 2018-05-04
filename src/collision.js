@@ -16,15 +16,40 @@ class RectCollider extends Collider {
 
     super(myHitbox, parent)
   }
+
+  draw(ctx) {
+    ctx.beginPath()
+    //console.log(this.parent.pos.x + " - " + this.parent.pos.y + " - " + (this.parent.pos.x + this.hitbox.w) + " - " + (this.parent.pos.y + this.hitbox.h))
+    ctx.rect(this.parent.pos.x, this.parent.pos.y, this.hitbox.w, this.hitbox.h)
+    ctx.fillStyle = '#f001'
+    ctx.lineWidth = 1
+    ctx.strokeStyle = 'red'
+    ctx.fill()
+    ctx.stroke()
+  }
 }
 
 class CircleCollider extends Collider {
   constructor(parent) {
     let myHitbox = {
-      r: parent.radius
+      r: parent.radius * 0.8
     }
 
     super(myHitbox, parent)
+
+    window.col = this
+  }
+
+  draw(ctx) {
+    ctx.beginPath()
+    ctx.arc(this.parent.pos.x, this.parent.pos.y, this.hitbox.r, 0, Math.PI * 2, false)
+    // ctx.ellipse(this.parent.pos.x, this.parent.pos.y, this.hitbox.r, this.)
+    //ctx.fillStyle = this.color
+    ctx.lineWidth = 1
+    ctx.strokeStyle = 'green'
+    ctx.fillStyle = '#0f01'
+    ctx.fill()
+    ctx.stroke()
   }
 }
 
@@ -40,12 +65,12 @@ function areRectsColliding(rect1, rect2) {
     x1: rect2.parent.pos.x,
     y1: rect2.parent.pos.y,
     x2: rect2.parent.pos.x + rect2.hitbox.w,
-    y: rect2.parent.pos.y + rect2.hitbox.h
+    y2: rect2.parent.pos.y + rect2.hitbox.h
   }
 
   return (
     A.x1 < B.x2 &&
-    A.x2 > b.x1 &&
+    A.x2 > B.x1 &&
     A.y1 < B.y2 &&
     A.y2 > B.y1
   )
@@ -69,19 +94,22 @@ function areRectCircleColliding(rect, circle) {
   let circleParentPos = circle.parent.pos
   let rectParentPos = rect.parent.pos
 
-  let cDistanceX = Math.abs(circleParentPos.x - rectParentPos.x)
-  let cDistanceY = Math.abs(circleParentPos.y - rectParentPos.y)
+  let cDistanceX = Math.abs(circleParentPos.x - (rectParentPos.x + rect.hitbox.w / 2))
+  let cDistanceY = Math.abs(circleParentPos.y - (rectParentPos.y + rect.hitbox.h / 2))
 
-  if (cDistanceX > (rect.hitbox.w / 2 + circle.hitbox.radius) &&
-    cDistanceY > (rect.hitbox.h / 2 + circle.hitbox.radius))
-    return false
+  if (cDistanceX > (rect.hitbox.w / 2 + circle.hitbox.r) ||
+    cDistanceY > (rect.hitbox.h / 2 + circle.hitbox.r)) return false
+
+  if (cDistanceX <= (rect.hitbox.w / 2) ||
+    cDistanceY <= (rect.hitbox.h / 2)) return true
+
 
   let cornerDistance_sq = (
-    Math.pow(cDistanceX - rect.hitbox.w / 2, 2) +
-    Math.pow(cDistanceY - rect.hitbox.h / 2, 2)
+    Math.pow(cDistanceX - (rect.hitbox.w / 2), 2) +
+    Math.pow(cDistanceY - (rect.hitbox.h / 2), 2)
   )
 
-  return cornerDistance_sq <= Math.pow(circle.hitbox.radius, 2)
+  return cornerDistance_sq <= Math.pow(circle.hitbox.r, 2)
 }
 
 class CollitionListener {
@@ -90,13 +118,13 @@ class CollitionListener {
     let body1 = col1 instanceof Collider ? col1 : col1.body
     this.body1 = {
       body: body1,
-      type: type1.constructor
+      type: body1.constructor
     }
 
     let body2 = col2 instanceof Collider ? col2 : col2.body
     this.body2 = {
       body: body2,
-      type: type2.constructor
+      type: body2.constructor
     }
 
     this.callback = callback
@@ -122,7 +150,7 @@ class CollitionListener {
   }
 
   areColliding() {
-    return this.checkFunction(this.body1, this.body2)
+    return this.checkFunction(this.body1.body, this.body2.body)
   }
 
   containsObject(go1, go2 = undefined) {
@@ -176,4 +204,10 @@ class BodyWorld {
     })
   }
 
+}
+
+export {
+  CircleCollider,
+  RectCollider,
+  BodyWorld
 }
