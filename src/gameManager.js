@@ -31,7 +31,6 @@ export default class GameManager {
   }
 
   collided() {
-    console.log("Collision!")
     this.init()
   }
 

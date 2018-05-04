@@ -454,7 +454,6 @@ var GameManager = function () {
   }, {
     key: 'collided',
     value: function collided() {
-      console.log("Collision!");
       this.init();
     }
   }, {
