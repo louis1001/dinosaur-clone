@@ -63,11 +63,270 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BodyWorld = exports.RectCollider = exports.CircleCollider = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = __webpack_require__(1);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Collider = function Collider(hitbox, parent) {
+  _classCallCheck(this, Collider);
+
+  this.hitbox = hitbox;
+  this.parent = parent;
+};
+
+var RectCollider = function (_Collider) {
+  _inherits(RectCollider, _Collider);
+
+  function RectCollider(parent) {
+    _classCallCheck(this, RectCollider);
+
+    var myHitbox = {
+      w: parent.sz.x,
+      h: parent.sz.y
+    };
+
+    return _possibleConstructorReturn(this, (RectCollider.__proto__ || Object.getPrototypeOf(RectCollider)).call(this, myHitbox, parent));
+  }
+
+  _createClass(RectCollider, [{
+    key: 'draw',
+    value: function draw(ctx) {
+      ctx.beginPath();
+      //console.log(this.parent.pos.x + " - " + this.parent.pos.y + " - " + (this.parent.pos.x + this.hitbox.w) + " - " + (this.parent.pos.y + this.hitbox.h))
+      ctx.rect(this.parent.pos.x, this.parent.pos.y, this.hitbox.w, this.hitbox.h);
+      ctx.fillStyle = '#f001';
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'red';
+      ctx.fill();
+      ctx.stroke();
+    }
+  }]);
+
+  return RectCollider;
+}(Collider);
+
+var CircleCollider = function (_Collider2) {
+  _inherits(CircleCollider, _Collider2);
+
+  function CircleCollider(parent) {
+    _classCallCheck(this, CircleCollider);
+
+    var myHitbox = {
+      r: parent.radius * 0.8
+    };
+
+    var _this2 = _possibleConstructorReturn(this, (CircleCollider.__proto__ || Object.getPrototypeOf(CircleCollider)).call(this, myHitbox, parent));
+
+    window.col = _this2;
+    return _this2;
+  }
+
+  _createClass(CircleCollider, [{
+    key: 'draw',
+    value: function draw(ctx) {
+      ctx.beginPath();
+      ctx.arc(this.parent.pos.x, this.parent.pos.y, this.hitbox.r, 0, Math.PI * 2, false);
+      // ctx.ellipse(this.parent.pos.x, this.parent.pos.y, this.hitbox.r, this.)
+      //ctx.fillStyle = this.color
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'green';
+      ctx.fillStyle = '#0f01';
+      ctx.fill();
+      ctx.stroke();
+    }
+  }]);
+
+  return CircleCollider;
+}(Collider);
+
+function areRectsColliding(rect1, rect2) {
+  var A = {
+    x1: rect1.parent.pos.x,
+    y1: rect1.parent.pos.y,
+    x2: rect1.parent.pos.x + rect1.hitbox.w,
+    y2: rect1.parent.pos.y + rect1.hitbox.h
+  };
+
+  var B = {
+    x1: rect2.parent.pos.x,
+    y1: rect2.parent.pos.y,
+    x2: rect2.parent.pos.x + rect2.hitbox.w,
+    y2: rect2.parent.pos.y + rect2.hitbox.h
+  };
+
+  return A.x1 < B.x2 && A.x2 > B.x1 && A.y1 < B.y2 && A.y2 > B.y1;
+}
+
+function areCirclesColliding(circle1, circle2) {
+  var hbx1 = circle1.hitbox;
+  var hbx2 = circle2.hitbox;
+
+  var distanceBetweenCircles = (0, _utils2.default)(circle1.parent.pos.x, circle1.parent.pos.y, circle2.parent.pos.x, circle2.parent.pos.y);
+
+  return distanceBetweenCircles < hbx1.radius + hbx2.radius;
+}
+
+function areRectCircleColliding(rect, circle) {
+
+  var circleParentPos = circle.parent.pos;
+  var rectParentPos = rect.parent.pos;
+
+  var cDistanceX = Math.abs(circleParentPos.x - (rectParentPos.x + rect.hitbox.w / 2));
+  var cDistanceY = Math.abs(circleParentPos.y - (rectParentPos.y + rect.hitbox.h / 2));
+
+  if (cDistanceX > rect.hitbox.w / 2 + circle.hitbox.r || cDistanceY > rect.hitbox.h / 2 + circle.hitbox.r) return false;
+
+  if (cDistanceX <= rect.hitbox.w / 2 || cDistanceY <= rect.hitbox.h / 2) return true;
+
+  var cornerDistance_sq = Math.pow(cDistanceX - rect.hitbox.w / 2, 2) + Math.pow(cDistanceY - rect.hitbox.h / 2, 2);
+
+  return cornerDistance_sq <= Math.pow(circle.hitbox.r, 2);
+}
+
+var CollitionListener = function () {
+  function CollitionListener(col1, col2, callback) {
+    _classCallCheck(this, CollitionListener);
+
+    var body1 = col1 instanceof Collider ? col1 : col1.body;
+    this.body1 = {
+      body: body1,
+      type: body1.constructor
+    };
+
+    var body2 = col2 instanceof Collider ? col2 : col2.body;
+    this.body2 = {
+      body: body2,
+      type: body2.constructor
+    };
+
+    this.callback = callback;
+
+    this.setCheckingFunction();
+  }
+
+  _createClass(CollitionListener, [{
+    key: 'setCheckingFunction',
+    value: function setCheckingFunction() {
+
+      if (this.body1.type === this.body2.type) {
+        this.checkFunction = this.body1.type === CircleCollider ? areCirclesColliding : areRectsColliding;
+      } else {
+        this.checkFunction = areRectCircleColliding;
+        if (this.body1.type === CircleCollider) {
+          var temp = this.body1;
+          this.body1 = this.body2;
+          this.body2 = temp;
+        }
+      }
+    }
+  }, {
+    key: 'areColliding',
+    value: function areColliding() {
+      return this.checkFunction(this.body1.body, this.body2.body);
+    }
+  }, {
+    key: 'containsObject',
+    value: function containsObject(go1) {
+      var go2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+      var body1 = go1 instanceof Collider ? go1 : go1.body;
+
+      var contains1 = body1 === this.body1 || body1 === this.body2;
+
+      contains2 = true;
+      if (go2) {
+        var body2 = go2 instanceof Collider ? go2 : go2.body;
+
+        contains2 = body2 === this.body1 || body2 === this.body2;
+      }
+
+      return contains1 && contains2;
+    }
+  }]);
+
+  return CollitionListener;
+}();
+
+var BodyWorld = function () {
+  function BodyWorld() {
+    _classCallCheck(this, BodyWorld);
+
+    this.colliders = [];
+  }
+
+  _createClass(BodyWorld, [{
+    key: 'addCollitionListener',
+    value: function addCollitionListener(gameObject1, gameObject2, callback) {
+      var newColListener = new CollitionListener(gameObject1, gameObject2, callback);
+      this.colliders.push(newColListener);
+    }
+  }, {
+    key: 'removeCollitionListener',
+    value: function removeCollitionListener(gameObject1) {
+      var gameObject2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+
+      this.colliders = this.colliders.filter(function (col) {
+        return !col.containsObject(gameObject1, gameObject2);
+      });
+    }
+  }, {
+    key: 'findColliders',
+    value: function findColliders(gameObject1) {
+      var gameObject2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+      var cols = this.colliders.filter(function (col) {
+        return col.containsObject(gameObject1, gameObject2);
+      });
+
+      return cols;
+    }
+  }, {
+    key: 'update',
+    value: function update() {
+      this.colliders.forEach(function (colLis) {
+        var thisCollided = colLis.areColliding();
+        if (thisCollided) {
+          colLis.callback();
+        }
+      });
+    }
+  }]);
+
+  return BodyWorld;
+}();
+
+exports.CircleCollider = CircleCollider;
+exports.RectCollider = RectCollider;
+exports.BodyWorld = BodyWorld;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -140,7 +399,7 @@ exports.max = max;
 exports.min = min;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -152,15 +411,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(4);
+var _player = __webpack_require__(5);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _obstacle = __webpack_require__(3);
+var _obstacle = __webpack_require__(4);
 
 var _obstacle2 = _interopRequireDefault(_obstacle);
 
-var _utils = __webpack_require__(0);
+var _collision = __webpack_require__(0);
+
+var _utils = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -171,36 +432,6 @@ var GameManager = function () {
     _classCallCheck(this, GameManager);
 
     this.worldBounds = worldBounds;
-
-    var gravity = {
-      x: 0,
-      y: 2
-    };
-
-    var highestScore = 0;
-
-    var floorHeight = 80;
-
-    this.floorPoints = [];
-
-    var obstacleOffset = 60;
-
-    var gameSpeed = 10;
-
-    var acceleration = 0.001;
-
-    var paused = false;
-    this.config = {
-      gravity: gravity,
-      highestScore: highestScore,
-      floorHeight: floorHeight,
-      obstacleOffset: obstacleOffset,
-      gameSpeed: gameSpeed,
-      acceleration: acceleration,
-      paused: paused
-    };
-
-    window.gameConfig = this.config;
 
     this.initKeyHandlers();
     this.init();
@@ -221,8 +452,48 @@ var GameManager = function () {
       }];
     }
   }, {
+    key: 'collided',
+    value: function collided() {
+      console.log("Collision!");
+      this.init();
+    }
+  }, {
     key: 'init',
     value: function init() {
+      var gravity = {
+        x: 0,
+        y: 2
+      };
+
+      var highestScore = 0;
+
+      var floorHeight = 80;
+
+      this.floorPoints = [];
+
+      var obstacleOffset = 60;
+
+      var gameSpeed = 10;
+
+      var acceleration = 0.001;
+
+      var debugging = false;
+
+      var paused = false;
+      this.config = {
+        gravity: gravity,
+        highestScore: highestScore,
+        floorHeight: floorHeight,
+        obstacleOffset: obstacleOffset,
+        gameSpeed: gameSpeed,
+        acceleration: acceleration,
+        paused: paused,
+        debugging: debugging
+      };
+
+      window.gameConfig = this.config;
+
+      this.collisionWorld = new _collision.BodyWorld();
 
       var playerRad = 15;
       var playerBounds = {
@@ -271,6 +542,8 @@ var GameManager = function () {
       this.obstacles.push(newObstacle);
       this.gameObjects.push(newObstacle);
       this.obstacleDelay = (0, _utils.randomIntFromRange)(this.config.obstacleOffset - 20, this.config.obstacleOffset + 30);
+
+      this.collisionWorld.addCollitionListener(this.player, newObstacle, this.collided.bind(this));
     }
   }, {
     key: 'drawFloor',
@@ -376,15 +649,22 @@ var GameManager = function () {
         obj.update();
       });
 
-      this.obstacles = this.obstacles.filter(function (obj) {
-        return obj.pos.x < -obj.sz.x;
-      });
-      this.gameObjects = this.gameObjects.filter(function (obj) {
-        if (obj instanceof _obstacle2.default) {
-          if (obj.pos.x < -obj.sz.x) return false;
+      //this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
+      // this.gameObjects = this.gameObjects.filter(obj => {
+      //   if (obj instanceof Obstacle) {
+      //     if (obj.pos.x < -obj.sz.x) return false
+      //   }
+      //   return true
+      // })
+
+      for (var i = this.obstacles.length - 1; i >= 0; i--) {
+        var obs = this.obstacles[i];
+        if (obs.pos.x < -obs.sz.x) {
+          this.obstacles.splice(i, 1);
+          var goIndex = this.gameObjects.indexOf(obs);
+          this.gameObjects.splice(goIndex, 1);
         }
-        return true;
-      });
+      }
 
       if (this.obstacleDelay <= 0) {
         this.createObstacle();
@@ -394,6 +674,7 @@ var GameManager = function () {
 
       this.config.gameSpeed += this.config.acceleration;
 
+      this.collisionWorld.update();
       this.updateScore();
     }
   }, {
@@ -434,19 +715,19 @@ var GameManager = function () {
 exports.default = GameManager;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _gameManager = __webpack_require__(1);
+var _gameManager = __webpack_require__(2);
 
 var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.1.0'; // Imports
+var gameVersion = '0.0.1.1'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
@@ -564,15 +845,15 @@ function animate() {
 
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    gm.update();
     gm.draw(c);
+    gm.update();
 }
 
 init();
 animate(undefined, true);
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -583,6 +864,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _collision = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -609,6 +892,8 @@ var Obstacle = function () {
       x: typeInfo.width,
       y: typeInfo.height
     };
+
+    this.body = new _collision.RectCollider(this);
 
     this.static = true;
   }
@@ -640,6 +925,8 @@ var Obstacle = function () {
         ctx.lineTo(this.pos.x + this.sz.x + 1, this.pos.y + this.sz.y);
         ctx.stroke();
       }
+
+      if (window.gameConfig.debugging) this.body.draw(ctx);
     }
   }], [{
     key: 'getTypes',
@@ -715,7 +1002,7 @@ Obstacle.types = {
 exports.default = Obstacle;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -727,7 +1014,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
+
+var _collision = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -775,21 +1064,22 @@ var Ball = function () {
         this.currentSpeed = (0, _utils.distance)(0, 0, this.vel.x, this.vel.y);
 
         this.bounce = 0.00;
+        this.body = new _collision.CircleCollider(this);
     }
 
     _createClass(Ball, [{
-        key: "applyForce",
+        key: 'applyForce',
         value: function applyForce(f) {
             this.acc.x += f.x;
             this.acc.y += f.y;
         }
     }, {
-        key: "jump",
+        key: 'jump',
         value: function jump() {
             if (!this.falling) this.applyForce(this.jumpForce);
         }
     }, {
-        key: "update",
+        key: 'update',
         value: function update() {
             this.pos.x += this.vel.x;
             this.pos.y += this.vel.y;
@@ -825,7 +1115,7 @@ var Ball = function () {
             };
         }
     }, {
-        key: "draw",
+        key: 'draw',
         value: function draw(ctx) {
 
             var distFromBottom = this.bounds.h - this.radius - this.pos.y;
@@ -866,6 +1156,10 @@ var Ball = function () {
             ctx.lineWidth = 3;
             ctx.strokeStyle = 'gray';
             ctx.stroke();
+
+            ctx.beginPath();
+
+            if (window.gameConfig.debugging) this.body.draw(ctx);
         }
     }]);
 
