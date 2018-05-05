@@ -23,9 +23,13 @@ const mouse = {
 
 let looping = false
 
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
-
-let keysDown = []
+let pastTime = undefined
+let _lastFrameRate = 0
+let frameRate = function () {
+    return _lastFrameRate
+}
+window.frameRate = frameRate
+window.frameCount = 0
 
 // Event Listeners
 addEventListener('mousemove', e => {
@@ -34,14 +38,7 @@ addEventListener('mousemove', e => {
     mouse.y = e.clientY - canvasPos.y
 })
 
-addEventListener('resize', () => {
-    // canvas.width = innerWidth
-    // canvas.height = innerWidth * 0.5
-
-    // init()
-})
-
-
+// TODO: make the canvas responsive and not restart every time it's rescaled.
 
 addEventListener('mousedown', e => {
     e.preventDefault()
@@ -114,6 +111,12 @@ function init() {
 function animate(_ = false, ignoreLoop = false) {
     if (!(ignoreLoop || looping)) return
     requestAnimationFrame(animate)
+    let currentTime = performance.now()
+    window.frameCount += 1
+
+
+    _lastFrameRate = 1000 / (currentTime - pastTime)
+    pastTime = currentTime
 
     c.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -122,4 +125,5 @@ function animate(_ = false, ignoreLoop = false) {
 }
 
 init()
+pastTime = performance.now()
 animate(undefined, true)
