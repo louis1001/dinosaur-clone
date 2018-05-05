@@ -434,6 +434,28 @@ var GameManager = function () {
     this.worldBounds = worldBounds;
 
     this.initKeyHandlers();
+    var gravity = {
+      x: 0,
+      y: 2
+    };
+    var acceleration = 0.001;
+
+    var obstacleOffset = 60;
+
+    var floorHeight = 80;
+
+    var debugging = false;
+
+    this.config = {
+      gravity: gravity,
+      floorHeight: floorHeight,
+      obstacleOffset: obstacleOffset,
+      acceleration: acceleration,
+      debugging: debugging
+    };
+
+    window.gameConfig = this.config;
+
     this.init();
   }
 
@@ -459,38 +481,12 @@ var GameManager = function () {
   }, {
     key: 'init',
     value: function init() {
-      var gravity = {
-        x: 0,
-        y: 2
-      };
-
-      var highestScore = 0;
-
-      var floorHeight = 80;
 
       this.floorPoints = [];
 
-      var obstacleOffset = 60;
+      this.config.gameSpeed = 10;
 
-      var gameSpeed = 10;
-
-      var acceleration = 0.001;
-
-      var debugging = false;
-
-      var paused = false;
-      this.config = {
-        gravity: gravity,
-        highestScore: highestScore,
-        floorHeight: floorHeight,
-        obstacleOffset: obstacleOffset,
-        gameSpeed: gameSpeed,
-        acceleration: acceleration,
-        paused: paused,
-        debugging: debugging
-      };
-
-      window.gameConfig = this.config;
+      this.config.paused = false;
 
       this.collisionWorld = new _collision.BodyWorld();
 
@@ -549,8 +545,8 @@ var GameManager = function () {
     value: function drawFloor(ctx) {
       this.floorPoints.forEach(function (pnt, i) {
         ctx.beginPath();
-        ctx.arc(pnt.x, pnt.y, 2, 0, Math.PI * 2);
-        ctx.lineWidth = 1;
+        ctx.rect(pnt.x, pnt.y, 1, 1);
+        ctx.lineWidth = 2;
         ctx.fillStyle = 'gray';
         ctx.strokeStyle = 'gray';
         ctx.stroke();
@@ -648,14 +644,6 @@ var GameManager = function () {
         obj.update();
       });
 
-      //this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
-      // this.gameObjects = this.gameObjects.filter(obj => {
-      //   if (obj instanceof Obstacle) {
-      //     if (obj.pos.x < -obj.sz.x) return false
-      //   }
-      //   return true
-      // })
-
       for (var i = this.obstacles.length - 1; i >= 0; i--) {
         var obs = this.obstacles[i];
         if (obs.pos.x < -obs.sz.x) {
@@ -749,9 +737,13 @@ var mouse = {
 
 var looping = false;
 
-var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
-
-var keysDown = [];
+var pastTime = undefined;
+var _lastFrameRate = 0;
+var frameRate = function frameRate() {
+    return _lastFrameRate;
+};
+window.frameRate = frameRate;
+window.frameCount = 0;
 
 // Event Listeners
 addEventListener('mousemove', function (e) {
@@ -760,12 +752,7 @@ addEventListener('mousemove', function (e) {
     mouse.y = e.clientY - canvasPos.y;
 });
 
-addEventListener('resize', function () {
-    // canvas.width = innerWidth
-    // canvas.height = innerWidth * 0.5
-
-    // init()
-});
+// TODO: make the canvas responsive and not restart every time it's rescaled.
 
 addEventListener('mousedown', function (e) {
     e.preventDefault();
@@ -841,6 +828,11 @@ function animate() {
 
     if (!(ignoreLoop || looping)) return;
     requestAnimationFrame(animate);
+    var currentTime = performance.now();
+    window.frameCount += 1;
+
+    _lastFrameRate = 1000 / (currentTime - pastTime);
+    pastTime = currentTime;
 
     c.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -849,6 +841,7 @@ function animate() {
 }
 
 init();
+pastTime = performance.now();
 animate(undefined, true);
 
 /***/ }),
