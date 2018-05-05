@@ -16,6 +16,28 @@ export default class GameManager {
     this.worldBounds = worldBounds
 
     this.initKeyHandlers()
+    let gravity = {
+      x: 0,
+      y: 2
+    }
+    let acceleration = 0.001
+
+    let obstacleOffset = 60
+
+    let floorHeight = 80
+
+    let debugging = false
+
+    this.config = {
+      gravity,
+      floorHeight,
+      obstacleOffset,
+      acceleration,
+      debugging
+    }
+
+    window.gameConfig = this.config
+
     this.init()
   }
 
@@ -35,38 +57,12 @@ export default class GameManager {
   }
 
   init() {
-    let gravity = {
-      x: 0,
-      y: 2
-    }
-
-    let highestScore = 0
-
-    let floorHeight = 80
 
     this.floorPoints = []
 
-    let obstacleOffset = 60
+    this.config.gameSpeed = 10
 
-    let gameSpeed = 10
-
-    let acceleration = 0.001
-
-    let debugging = false
-
-    let paused = false
-    this.config = {
-      gravity,
-      highestScore,
-      floorHeight,
-      obstacleOffset,
-      gameSpeed,
-      acceleration,
-      paused,
-      debugging
-    }
-
-    window.gameConfig = this.config
+    this.config.paused = false
 
     this.collisionWorld = new BodyWorld()
 
@@ -120,8 +116,8 @@ export default class GameManager {
   drawFloor(ctx) {
     this.floorPoints.forEach((pnt, i) => {
       ctx.beginPath()
-      ctx.arc(pnt.x, pnt.y, 2, 0, Math.PI * 2)
-      ctx.lineWidth = 1
+      ctx.rect(pnt.x, pnt.y, 1, 1)
+      ctx.lineWidth = 2
       ctx.fillStyle = 'gray'
       ctx.strokeStyle = 'gray'
       ctx.stroke()
@@ -209,14 +205,6 @@ export default class GameManager {
       }
       obj.update()
     })
-
-    //this.obstacles = this.obstacles.filter(obj => obj.pos.x < -obj.sz.x)
-    // this.gameObjects = this.gameObjects.filter(obj => {
-    //   if (obj instanceof Obstacle) {
-    //     if (obj.pos.x < -obj.sz.x) return false
-    //   }
-    //   return true
-    // })
 
     for (let i = this.obstacles.length - 1; i >= 0; i--) {
       let obs = this.obstacles[i]
