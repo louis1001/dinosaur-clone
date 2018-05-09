@@ -9,7 +9,7 @@ class Collider {
 
 class RectCollider extends Collider {
   constructor(parent) {
-    let myHitbox = {
+    const myHitbox = {
       w: parent.sz.x,
       h: parent.sz.y
     }
@@ -31,7 +31,7 @@ class RectCollider extends Collider {
 
 class CircleCollider extends Collider {
   constructor(parent) {
-    let myHitbox = {
+    const myHitbox = {
       r: parent.radius * 0.8
     }
 
@@ -54,14 +54,14 @@ class CircleCollider extends Collider {
 }
 
 function areRectsColliding(rect1, rect2) {
-  let A = {
+  const A = {
     x1: rect1.parent.pos.x,
     y1: rect1.parent.pos.y,
     x2: rect1.parent.pos.x + rect1.hitbox.w,
     y2: rect1.parent.pos.y + rect1.hitbox.h
   }
 
-  let B = {
+  const B = {
     x1: rect2.parent.pos.x,
     y1: rect2.parent.pos.y,
     x2: rect2.parent.pos.x + rect2.hitbox.w,
@@ -77,10 +77,10 @@ function areRectsColliding(rect1, rect2) {
 }
 
 function areCirclesColliding(circle1, circle2) {
-  let hbx1 = circle1.hitbox
-  let hbx2 = circle2.hitbox
+  const hbx1 = circle1.hitbox
+  const hbx2 = circle2.hitbox
 
-  let distanceBetweenCircles = distance(
+  const distanceBetweenCircles = distance(
     circle1.parent.pos.x,
     circle1.parent.pos.y,
     circle2.parent.pos.x,
@@ -91,11 +91,11 @@ function areCirclesColliding(circle1, circle2) {
 
 function areRectCircleColliding(rect, circle) {
 
-  let circleParentPos = circle.parent.pos
-  let rectParentPos = rect.parent.pos
+  const circleParentPos = circle.parent.pos
+  const rectParentPos = rect.parent.pos
 
-  let cDistanceX = Math.abs(circleParentPos.x - (rectParentPos.x + rect.hitbox.w / 2))
-  let cDistanceY = Math.abs(circleParentPos.y - (rectParentPos.y + rect.hitbox.h / 2))
+  const cDistanceX = Math.abs(circleParentPos.x - (rectParentPos.x + rect.hitbox.w / 2))
+  const cDistanceY = Math.abs(circleParentPos.y - (rectParentPos.y + rect.hitbox.h / 2))
 
   if (cDistanceX > (rect.hitbox.w / 2 + circle.hitbox.r) ||
     cDistanceY > (rect.hitbox.h / 2 + circle.hitbox.r)) return false
@@ -104,7 +104,7 @@ function areRectCircleColliding(rect, circle) {
     cDistanceY <= (rect.hitbox.h / 2)) return true
 
 
-  let cornerDistance_sq = (
+  const cornerDistance_sq = (
     Math.pow(cDistanceX - (rect.hitbox.w / 2), 2) +
     Math.pow(cDistanceY - (rect.hitbox.h / 2), 2)
   )
@@ -115,13 +115,13 @@ function areRectCircleColliding(rect, circle) {
 class CollitionListener {
   constructor(col1, col2, callback) {
 
-    let body1 = col1 instanceof Collider ? col1 : col1.body
+    const body1 = col1 instanceof Collider ? col1 : col1.body
     this.body1 = {
       body: body1,
       type: body1.constructor
     }
 
-    let body2 = col2 instanceof Collider ? col2 : col2.body
+    const body2 = col2 instanceof Collider ? col2 : col2.body
     this.body2 = {
       body: body2,
       type: body2.constructor
@@ -154,13 +154,13 @@ class CollitionListener {
   }
 
   containsObject(go1, go2 = undefined) {
-    let body1 = go1 instanceof Collider ? go1 : go1.body
+    const body1 = go1 instanceof Collider ? go1 : go1.body
 
-    let contains1 = body1 === this.body1 || body1 === this.body2
+    const contains1 = body1 === this.body1 || body1 === this.body2
 
     contains2 = true
     if (go2) {
-      let body2 = go2 instanceof Collider ? go2 : go2.body
+      const body2 = go2 instanceof Collider ? go2 : go2.body
 
       contains2 = body2 === this.body1 || body2 === this.body2
     }
@@ -177,7 +177,7 @@ class BodyWorld {
   }
 
   addCollitionListener(gameObject1, gameObject2, callback) {
-    let newColListener = new CollitionListener(gameObject1, gameObject2, callback)
+    const newColListener = new CollitionListener(gameObject1, gameObject2, callback)
     this.colliders.push(newColListener)
   }
 
@@ -190,14 +190,14 @@ class BodyWorld {
   }
 
   findColliders(gameObject1, gameObject2 = undefined) {
-    let cols = this.colliders.filter(col => col.containsObject(gameObject1, gameObject2))
+    const cols = this.colliders.filter(col => col.containsObject(gameObject1, gameObject2))
 
     return cols
   }
 
   update() {
     this.colliders.forEach(colLis => {
-      let thisCollided = colLis.areColliding()
+      const thisCollided = colLis.areColliding()
       if (thisCollided) {
         colLis.callback()
       }

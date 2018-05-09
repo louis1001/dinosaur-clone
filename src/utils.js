@@ -22,20 +22,21 @@ function distance(x1, y1, x2, y2) {
 }
 
 function map(val, og_a, og_b, tg_a, tg_b, as_int = false) {
-  let og_range = og_b - og_a
-  let constraint_val = val - og_a
-  let percentage = constraint_val / og_range
+  const og_range = og_b - og_a
+  const constraint_val = val - og_a
+  const percentage = constraint_val / og_range
 
-  let tg_range = tg_b - tg_a
-  let constraint_tg_val = percentage * tg_range
+  const tg_range = tg_b - tg_a
+  const constraint_tg_val = percentage * tg_range
 
-  let mapped = constraint_tg_val + tg_a
+  const mapped = constraint_tg_val + tg_a
 
   if (as_int) {
-    mapped = Math.floor(mapped)
+    return Math.floor(mapped)
+  } else {
+    return mapped
   }
 
-  return mapped
 }
 
 function max(a, b) {

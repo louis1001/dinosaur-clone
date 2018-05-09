@@ -20,13 +20,13 @@ export default class GameManager {
       x: 0,
       y: 2
     }
-    let acceleration = 0.001
+    const acceleration = 0.001
 
-    let obstacleOffset = 60
+    const obstacleOffset = 60
 
-    let floorHeight = 80
+    const floorHeight = 80
 
-    let debugging = false
+    const debugging = false
 
     this.config = {
       gravity,
@@ -66,15 +66,15 @@ export default class GameManager {
 
     this.collisionWorld = new BodyWorld()
 
-    let playerRad = 15
-    let playerBounds = {
+    const playerRad = 15
+    const playerBounds = {
       x: 100 - playerRad,
       y: -Infinity,
       w: 100 + playerRad,
       h: this.worldBounds.y - this.config.floorHeight
     }
 
-    let playerVel = {
+    const playerVel = {
       x: 0,
       y: 0
     }
@@ -94,17 +94,17 @@ export default class GameManager {
 
   createObstacle() {
 
-    let availableTypes = Obstacle.getTypes()
-    let randomIndex = randomIntFromRange(0, availableTypes.length - 1)
+    const availableTypes = Obstacle.getTypes()
+    const randomIndex = randomIntFromRange(0, availableTypes.length - 1)
 
-    let obstacleBounds = {
+    const obstacleBounds = {
       x: this.worldBounds.x,
       y: this.worldBounds.y - this.config.floorHeight
     }
 
-    let obsSpeed = () => this.config.gameSpeed
+    const obsSpeed = () => this.config.gameSpeed
 
-    let newObstacle = new Obstacle(availableTypes[randomIndex], obstacleBounds, obsSpeed)
+    const newObstacle = new Obstacle(availableTypes[randomIndex], obstacleBounds, obsSpeed)
 
     this.obstacles.push(newObstacle)
     this.gameObjects.push(newObstacle)
@@ -143,10 +143,10 @@ export default class GameManager {
 
     this.floorPoints = this.floorPoints.filter(pt => pt.x > -1)
 
-    let numPoints = this.floorPoints.length
+    const numPoints = this.floorPoints.length
     if (numPoints == 0 || this.floorPoints[numPoints - 1].x <= this.worldBounds.x) {
-      let ptX = map(Math.random(), 0, 1, 0, 40)
-      let ptY = map(Math.random(), 0, 1, 0, this.config.floorHeight)
+      const ptX = map(Math.random(), 0, 1, 0, 40)
+      const ptY = map(Math.random(), 0, 1, 0, this.config.floorHeight)
 
       this.floorPoints.push({
         x: this.worldBounds.x + ptX,
@@ -167,20 +167,24 @@ export default class GameManager {
     ctx.fillStyle = 'gray'
     ctx.font = '20px sans-serif'
 
-    let HighScoreText = "" + Math.round(sessionStorage.hScore)
-    scoreText = HighScoreText.padStart(9, "0")
+    const highestScore =
+      String(Math.round(sessionStorage.hScore))
+      .padStart(9, "0")
+
     ctx.fillText("HI", this.worldBounds.x - 145, 30)
     ctx.fillText(scoreText, this.worldBounds.x - 120, 30)
 
-    let scoreText = "" + Math.round(this.player.score)
-    scoreText = scoreText.padStart(9, "0")
+    const scoreText =
+      String(Math.round(this.player.score))
+      .padStart(9, "0")
+
     ctx.fillText(scoreText, this.worldBounds.x - 120, 70)
 
     if (this.config.paused) {
       ctx.fillStyle = 'darkgray'
       ctx.font = '50px sans-serif'
 
-      let pauseText = "PAUSED"
+      const pauseText = "PAUSED"
       ctx.fillText(pauseText, this.worldBounds.x * 0.4, this.worldBounds.y / 2)
     }
   }
@@ -207,10 +211,10 @@ export default class GameManager {
     })
 
     for (let i = this.obstacles.length - 1; i >= 0; i--) {
-      let obs = this.obstacles[i]
+      const obs = this.obstacles[i]
       if (obs.pos.x < -obs.sz.x) {
         this.obstacles.splice(i, 1)
-        let goIndex = this.gameObjects.indexOf(obs)
+        const goIndex = this.gameObjects.indexOf(obs)
         this.gameObjects.splice(goIndex, 1)
       }
     }

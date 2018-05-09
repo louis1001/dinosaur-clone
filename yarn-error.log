@@ -1,8 +1,8 @@
 Arguments: 
-  E:\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js star
+  E:\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js s
 
 PATH: 
-  C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;E:\Git\cmd;E:\Ruby25-x64\bin;E:\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin;C:\adb;E:\Programas\Python\Python36-32\Scripts\;E:\Programas\Python\Python36-32\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin
+  C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;E:\Git\cmd;E:\Ruby25-x64\bin;E:\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin;C:\adb;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;E:\nodejs\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin;C:\Users\Juan Nieve\AppData\Roaming\npm\node_modules\windows-build-tools\node_modules\.bin;C:\Users\Juan Nieve\AppData\Roaming\npm\node_modules\.bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;E:\Git\cmd;E:\Ruby25-x64\bin;E:\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\Juan Nieve\AppData\Local\Microsoft\WindowsApps;E:\Programas\Microsoft VS Code\bin;C:\Users\Juan Nieve\AppData\Roaming\npm;C:\Users\Juan Nieve\AppData\Local\Yarn\bin;C:\adb;E:\Programas\Python\Python36-32\Scripts\;E:\Programas\Python\Python36-32\;E:\Programas\heroku\bin
 
 Yarn version: 
   1.5.1
@@ -23,7 +23,7 @@ npm manifest:
       "test": "echo \"Error: no test specified\" && exit 1",
       "deploy": "./node_modules/.bin/webpack && node ./.deploy.js",
       "build": "./node_modules/.bin/webpack",
-      "start": "./node_modules/.bin/webpack && node ./.serve.js"
+      "start": "./node_modules/.bin/webpack --watch"
   
     },
     "keywords": [],
@@ -5931,7 +5931,7 @@ Lockfile:
       yeoman-environment "^2.0.5"
 
 Trace: 
-  Error: Command "star" not found. Did you mean "start"?
+  Error: Command "s" not found.
       at new MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
       at C:\Program Files (x86)\Yarn\lib\cli.js:87307:17
       at Generator.next (<anonymous>)

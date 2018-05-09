@@ -63,11 +63,154 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _gameManager = __webpack_require__(3);
+
+var _gameManager2 = _interopRequireDefault(_gameManager);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var gameVersion = '0.0.1.3'; // Imports
+
+
+console.log("Starting dino-clone version: " + gameVersion);
+
+// Initial Setup
+var canvas = document.querySelector('canvas');
+var c = canvas.getContext('2d');
+
+var maxWidth = 900;
+var cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth;
+
+canvas.width = cWidth;
+canvas.height = cWidth / 2;
+
+// Variables
+var mouse = {
+    x: undefined,
+    y: undefined
+};
+
+var looping = false;
+
+var pastTime = undefined;
+var _lastFrameRate = 0;
+var frameRate = function frameRate() {
+    return _lastFrameRate;
+};
+window.frameRate = frameRate;
+window.frameCount = 0;
+
+// Event Listeners
+addEventListener('mousemove', function (e) {
+    var canvasPos = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - canvasPos.x;
+    mouse.y = e.clientY - canvasPos.y;
+});
+
+// TODO: make the canvas responsive and not restart every time it's rescaled.
+
+addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+
+addEventListener('mouseup', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
+
+addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    gm.keyPressed({
+        key: ' '
+    });
+});
+addEventListener('touchmove', function (e) {
+    e.preventDefault();
+});
+addEventListener('touchend', function (e) {
+    e.preventDefault();
+    gm.keyReleased({
+        key: ' '
+    });
+});
+
+addEventListener('keydown', function (e) {
+    if (e.key == 'r') {
+        init();
+        return;
+    }
+    gm.keyPressed(e);
+});
+
+addEventListener('keyup', function (e) {
+    gm.keyReleased(e);
+});
+
+function loop() {
+    looping = true;
+    animate();
+}
+
+function noLoop() {
+    looping = false;
+}
+
+// Objects
+var gm = void 0;
+
+// Implementation
+function init() {
+    looping = true;
+
+    var wBounds = {
+        x: canvas.width,
+        y: canvas.height
+    };
+
+    gm = new _gameManager2.default(wBounds);
+}
+
+// Animation Loop
+function animate() {
+    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    if (!(ignoreLoop || looping)) return;
+    requestAnimationFrame(animate);
+    var currentTime = performance.now();
+    window.frameCount += 1;
+
+    _lastFrameRate = 1000 / (currentTime - pastTime);
+    pastTime = currentTime;
+
+    c.clearRect(0, 0, canvas.width, canvas.height);
+
+    gm.draw(c);
+    gm.update();
+}
+
+init();
+pastTime = performance.now();
+animate(undefined, true);
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -80,7 +223,7 @@ exports.BodyWorld = exports.RectCollider = exports.CircleCollider = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -326,7 +469,7 @@ exports.RectCollider = RectCollider;
 exports.BodyWorld = BodyWorld;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -371,10 +514,10 @@ function map(val, og_a, og_b, tg_a, tg_b) {
   var mapped = constraint_tg_val + tg_a;
 
   if (as_int) {
-    mapped = Math.floor(mapped);
+    return Math.floor(mapped);
+  } else {
+    return mapped;
   }
-
-  return mapped;
 }
 
 function max(a, b) {
@@ -399,7 +542,7 @@ exports.max = max;
 exports.min = min;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -419,9 +562,9 @@ var _obstacle = __webpack_require__(4);
 
 var _obstacle2 = _interopRequireDefault(_obstacle);
 
-var _collision = __webpack_require__(0);
+var _collision = __webpack_require__(1);
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -601,13 +744,13 @@ var GameManager = function () {
       ctx.fillStyle = 'gray';
       ctx.font = '20px sans-serif';
 
-      var HighScoreText = "" + Math.round(sessionStorage.hScore);
-      scoreText = HighScoreText.padStart(9, "0");
+      var highestScore = String(Math.round(sessionStorage.hScore)).padStart(9, "0");
+
       ctx.fillText("HI", this.worldBounds.x - 145, 30);
       ctx.fillText(scoreText, this.worldBounds.x - 120, 30);
 
-      var scoreText = "" + Math.round(this.player.score);
-      scoreText = scoreText.padStart(9, "0");
+      var scoreText = String(Math.round(this.player.score)).padStart(9, "0");
+
       ctx.fillText(scoreText, this.worldBounds.x - 120, 70);
 
       if (this.config.paused) {
@@ -702,149 +845,6 @@ var GameManager = function () {
 exports.default = GameManager;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _gameManager = __webpack_require__(2);
-
-var _gameManager2 = _interopRequireDefault(_gameManager);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var gameVersion = '0.0.1.2'; // Imports
-
-
-console.log("Starting dino-clone version: " + gameVersion);
-
-// Initial Setup
-var canvas = document.querySelector('canvas');
-var c = canvas.getContext('2d');
-
-var maxWidth = 900;
-var cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth;
-
-canvas.width = cWidth;
-canvas.height = cWidth / 2;
-
-// Variables
-var mouse = {
-    x: undefined,
-    y: undefined
-};
-
-var looping = false;
-
-var pastTime = undefined;
-var _lastFrameRate = 0;
-var frameRate = function frameRate() {
-    return _lastFrameRate;
-};
-window.frameRate = frameRate;
-window.frameCount = 0;
-
-// Event Listeners
-addEventListener('mousemove', function (e) {
-    var canvasPos = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - canvasPos.x;
-    mouse.y = e.clientY - canvasPos.y;
-});
-
-// TODO: make the canvas responsive and not restart every time it's rescaled.
-
-addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    gm.keyPressed({
-        key: ' '
-    });
-});
-
-addEventListener('mouseup', function (e) {
-    e.preventDefault();
-    gm.keyReleased({
-        key: ' '
-    });
-});
-
-addEventListener('touchstart', function (e) {
-    e.preventDefault();
-    gm.keyPressed({
-        key: ' '
-    });
-});
-addEventListener('touchmove', function (e) {
-    e.preventDefault();
-});
-addEventListener('touchend', function (e) {
-    e.preventDefault();
-    gm.keyReleased({
-        key: ' '
-    });
-});
-
-addEventListener('keydown', function (e) {
-    if (e.key == 'r') {
-        init();
-        return;
-    }
-    gm.keyPressed(e);
-});
-
-addEventListener('keyup', function (e) {
-    gm.keyReleased(e);
-});
-
-function loop() {
-    looping = true;
-    animate();
-}
-
-function noLoop() {
-    looping = false;
-}
-
-// Objects
-var gm = void 0;
-
-// Implementation
-function init() {
-    looping = true;
-
-    var wBounds = {
-        x: canvas.width,
-        y: canvas.height
-    };
-
-    gm = new _gameManager2.default(wBounds);
-}
-
-// Animation Loop
-function animate() {
-    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-    var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-    if (!(ignoreLoop || looping)) return;
-    requestAnimationFrame(animate);
-    var currentTime = performance.now();
-    window.frameCount += 1;
-
-    _lastFrameRate = 1000 / (currentTime - pastTime);
-    pastTime = currentTime;
-
-    c.clearRect(0, 0, canvas.width, canvas.height);
-
-    gm.draw(c);
-    gm.update();
-}
-
-init();
-pastTime = performance.now();
-animate(undefined, true);
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -857,7 +857,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _collision = __webpack_require__(0);
+var _collision = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1006,9 +1006,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
-var _collision = __webpack_require__(0);
+var _collision = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 

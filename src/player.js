@@ -84,7 +84,7 @@ export default class Ball {
     this.pos.x = constrain(this.pos.x, this.bounds.x + this.radius, this.bounds.w - this.radius)
     this.pos.y = constrain(this.pos.y, this.bounds.y + this.radius, this.bounds.h - this.radius)
 
-    let currentSpeed = distance(0, 0, this.vel.x, this.vel.y)
+    const currentSpeed = distance(0, 0, this.vel.x, this.vel.y)
     if (currentSpeed > this.maxSpeed) {
       let ratioSpeed = this.maxSpeed / currentSpeed
 
@@ -102,15 +102,15 @@ export default class Ball {
 
   draw(ctx) {
 
-    let distFromBottom = this.bounds.h - this.radius - this.pos.y
-    let threshold = 60
+    const distFromBottom = this.bounds.h - this.radius - this.pos.y
+    const threshold = 60
     if (distFromBottom < threshold) {
-      let elSize = map(distFromBottom, 0, threshold, this.radius * 1.5, this.radius * 2.4)
+      const elSize = map(distFromBottom, 0, threshold, this.radius * 1.5, this.radius * 2.4)
       // console.log(elSize)
 
       ctx.beginPath()
       ctx.ellipse(this.pos.x, this.bounds.h + 3, elSize, elSize * 0.2, 0, 0, 2 * Math.PI)
-      let col = map(distFromBottom, 0, threshold, 90, 255)
+      const col = map(distFromBottom, 0, threshold, 90, 255)
       ctx.fillStyle = "rgba(" + col + ", " + col + ", " + col + ")"
 
       ctx.fill()
@@ -134,7 +134,7 @@ export default class Ball {
     ctx.closePath()
 
     ctx.beginPath()
-    let arcStart = this.score % (Math.PI * 2)
+    const arcStart = this.score % (Math.PI * 2)
 
     ctx.arc(this.pos.x, this.pos.y, this.radius * 0.75, arcStart, arcStart + Math.PI / 2, false)
     ctx.lineWidth = 3

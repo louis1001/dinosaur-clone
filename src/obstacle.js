@@ -5,7 +5,7 @@ import {
 class Obstacle {
 
   constructor(type, boundaries, speed = () => 0.0) {
-    let typeInfo = Obstacle.types[type]
+    const typeInfo = Obstacle.types[type]
     this.bounds = boundaries
 
     this.type = type
@@ -27,7 +27,7 @@ class Obstacle {
   }
 
   update() {
-    let currentSpeed = this.getCurrentSpeed()
+    const currentSpeed = this.getCurrentSpeed()
 
     this.pos.x -= currentSpeed
   }
@@ -56,7 +56,7 @@ class Obstacle {
   }
 
   static getTypes() {
-    let obstacleTypes = Object.keys(Obstacle.types)
+    const obstacleTypes = Object.keys(Obstacle.types)
 
     return obstacleTypes
   }

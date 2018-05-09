@@ -1,7 +1,7 @@
 // Imports
 import GameManager from './gameManager'
 
-let gameVersion = '0.0.1.2'
+let gameVersion = '0.0.1.3'
 
 console.log("Starting dino-clone version: " + gameVersion)
 
@@ -9,8 +9,8 @@ console.log("Starting dino-clone version: " + gameVersion)
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
-let maxWidth = 900
-let cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth
+const maxWidth = 900
+const cWidth = innerWidth * 0.95 < maxWidth ? innerWidth * 0.95 : maxWidth
 
 canvas.width = cWidth
 canvas.height = (cWidth / 2)
@@ -25,7 +25,7 @@ let looping = false
 
 let pastTime = undefined
 let _lastFrameRate = 0
-let frameRate = function () {
+const frameRate = function () {
     return _lastFrameRate
 }
 window.frameRate = frameRate
@@ -33,7 +33,7 @@ window.frameCount = 0
 
 // Event Listeners
 addEventListener('mousemove', e => {
-    let canvasPos = canvas.getBoundingClientRect()
+    const canvasPos = canvas.getBoundingClientRect()
     mouse.x = e.clientX - canvasPos.x
     mouse.y = e.clientY - canvasPos.y
 })
@@ -98,7 +98,7 @@ let gm
 function init() {
     looping = true
 
-    let wBounds = {
+    const wBounds = {
         x: canvas.width,
         y: canvas.height
     }
@@ -111,7 +111,7 @@ function init() {
 function animate(_ = false, ignoreLoop = false) {
     if (!(ignoreLoop || looping)) return
     requestAnimationFrame(animate)
-    let currentTime = performance.now()
+    const currentTime = performance.now()
     window.frameCount += 1
 
 
