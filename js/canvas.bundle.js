@@ -371,10 +371,10 @@ function map(val, og_a, og_b, tg_a, tg_b) {
   var mapped = constraint_tg_val + tg_a;
 
   if (as_int) {
-    mapped = Math.floor(mapped);
+    return Math.floor(mapped);
+  } else {
+    return mapped;
   }
-
-  return mapped;
 }
 
 function max(a, b) {
@@ -601,13 +601,13 @@ var GameManager = function () {
       ctx.fillStyle = 'gray';
       ctx.font = '20px sans-serif';
 
-      var HighScoreText = "" + Math.round(sessionStorage.hScore);
-      scoreText = HighScoreText.padStart(9, "0");
+      var highestScore = String(Math.round(sessionStorage.hScore)).padStart(9, "0");
+
       ctx.fillText("HI", this.worldBounds.x - 145, 30);
       ctx.fillText(scoreText, this.worldBounds.x - 120, 30);
 
-      var scoreText = "" + Math.round(this.player.score);
-      scoreText = scoreText.padStart(9, "0");
+      var scoreText = String(Math.round(this.player.score)).padStart(9, "0");
+
       ctx.fillText(scoreText, this.worldBounds.x - 120, 70);
 
       if (this.config.paused) {
@@ -714,7 +714,7 @@ var _gameManager2 = _interopRequireDefault(_gameManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gameVersion = '0.0.1.2'; // Imports
+var gameVersion = '0.0.1.3'; // Imports
 
 
 console.log("Starting dino-clone version: " + gameVersion);
