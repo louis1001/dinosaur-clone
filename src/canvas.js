@@ -108,12 +108,10 @@ function init() {
 }
 
 // Animation Loop
-function animate(_ = false, ignoreLoop = false) {
+function animate(currentTime = false, ignoreLoop = false) {
     if (!(ignoreLoop || looping)) return
     requestAnimationFrame(animate)
-    const currentTime = performance.now()
     window.frameCount += 1
-
 
     _lastFrameRate = 1000 / (currentTime - pastTime)
     pastTime = currentTime

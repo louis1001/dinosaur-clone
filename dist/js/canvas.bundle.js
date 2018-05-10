@@ -822,13 +822,11 @@ function init() {
 
 // Animation Loop
 function animate() {
-    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+    var currentTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     if (!(ignoreLoop || looping)) return;
     requestAnimationFrame(animate);
-    var currentTime = performance.now();
     window.frameCount += 1;
 
     _lastFrameRate = 1000 / (currentTime - pastTime);
