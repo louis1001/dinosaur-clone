@@ -172,7 +172,7 @@ export default class GameManager {
       .padStart(9, "0")
 
     ctx.fillText("HI", this.worldBounds.x - 145, 30)
-    ctx.fillText(scoreText, this.worldBounds.x - 120, 30)
+    ctx.fillText(highestScore, this.worldBounds.x - 120, 30)
 
     const scoreText =
       String(Math.round(this.player.score))

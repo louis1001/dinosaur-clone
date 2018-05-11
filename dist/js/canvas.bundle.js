@@ -604,7 +604,7 @@ var GameManager = function () {
       var highestScore = String(Math.round(sessionStorage.hScore)).padStart(9, "0");
 
       ctx.fillText("HI", this.worldBounds.x - 145, 30);
-      ctx.fillText(scoreText, this.worldBounds.x - 120, 30);
+      ctx.fillText(highestScore, this.worldBounds.x - 120, 30);
 
       var scoreText = String(Math.round(this.player.score)).padStart(9, "0");
 
@@ -1112,7 +1112,6 @@ var Ball = function () {
             var threshold = 60;
             if (distFromBottom < threshold) {
                 var elSize = (0, _utils.map)(distFromBottom, 0, threshold, this.radius * 1.5, this.radius * 2.4);
-                // console.log(elSize)
 
                 ctx.beginPath();
                 ctx.ellipse(this.pos.x, this.bounds.h + 3, elSize, elSize * 0.2, 0, 0, 2 * Math.PI);
@@ -1120,7 +1119,6 @@ var Ball = function () {
                 ctx.fillStyle = "rgba(" + col + ", " + col + ", " + col + ")";
 
                 ctx.fill();
-                // console.log(elSize)
             }
 
             ctx.beginPath();

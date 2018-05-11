@@ -106,7 +106,6 @@ export default class Ball {
     const threshold = 60
     if (distFromBottom < threshold) {
       const elSize = map(distFromBottom, 0, threshold, this.radius * 1.5, this.radius * 2.4)
-      // console.log(elSize)
 
       ctx.beginPath()
       ctx.ellipse(this.pos.x, this.bounds.h + 3, elSize, elSize * 0.2, 0, 0, 2 * Math.PI)
@@ -114,7 +113,6 @@ export default class Ball {
       ctx.fillStyle = "rgba(" + col + ", " + col + ", " + col + ")"
 
       ctx.fill()
-      // console.log(elSize)
     }
 
     ctx.beginPath()
