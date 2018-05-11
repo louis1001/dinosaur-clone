@@ -192,8 +192,6 @@ export default class GameManager {
   handleKeys() {
     if (this.keysDown.includes(" ") || this.keysDown.includes("ArrowUp")) {
       this.player.jump()
-    } else {
-      this.player.falling = true
     }
   }
 
