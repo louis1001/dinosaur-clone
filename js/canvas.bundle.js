@@ -604,7 +604,7 @@ var GameManager = function () {
       var highestScore = String(Math.round(sessionStorage.hScore)).padStart(9, "0");
 
       ctx.fillText("HI", this.worldBounds.x - 145, 30);
-      ctx.fillText(scoreText, this.worldBounds.x - 120, 30);
+      ctx.fillText(highestScore, this.worldBounds.x - 120, 30);
 
       var scoreText = String(Math.round(this.player.score)).padStart(9, "0");
 
@@ -623,8 +623,6 @@ var GameManager = function () {
     value: function handleKeys() {
       if (this.keysDown.includes(" ") || this.keysDown.includes("ArrowUp")) {
         this.player.jump();
-      } else {
-        this.player.falling = true;
       }
     }
   }, {
@@ -822,13 +820,11 @@ function init() {
 
 // Animation Loop
 function animate() {
-    var _ = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+    var currentTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var ignoreLoop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     if (!(ignoreLoop || looping)) return;
     requestAnimationFrame(animate);
-    var currentTime = performance.now();
     window.frameCount += 1;
 
     _lastFrameRate = 1000 / (currentTime - pastTime);
@@ -1114,7 +1110,6 @@ var Ball = function () {
             var threshold = 60;
             if (distFromBottom < threshold) {
                 var elSize = (0, _utils.map)(distFromBottom, 0, threshold, this.radius * 1.5, this.radius * 2.4);
-                // console.log(elSize)
 
                 ctx.beginPath();
                 ctx.ellipse(this.pos.x, this.bounds.h + 3, elSize, elSize * 0.2, 0, 0, 2 * Math.PI);
@@ -1122,7 +1117,6 @@ var Ball = function () {
                 ctx.fillStyle = "rgba(" + col + ", " + col + ", " + col + ")";
 
                 ctx.fill();
-                // console.log(elSize)
             }
 
             ctx.beginPath();
